@@ -1,18 +1,60 @@
 import { bounds, pieceSize, type Piece, type Polyline } from '~/utils/pattern';
 
-export type PaperId = 'a4' | 'letter';
+export type PaperId =
+  'a4' | 'a3' | 'a2' | 'a1' | 'a0' | 'letter' | 'legal' | 'tabloid' | 'arch-d';
+
+export type PaperFamily = 'ISO' | 'US';
 
 export interface Paper {
   id: PaperId;
   name: string;
+  family: PaperFamily;
   width: number;
   height: number;
 }
 
+const INCH_MM = 25.4;
+
+const iso = (
+  id: PaperId,
+  name: string,
+  width: number,
+  height: number,
+): Paper => ({
+  id,
+  name,
+  family: 'ISO',
+  width,
+  height,
+});
+
+const us = (
+  id: PaperId,
+  name: string,
+  width: number,
+  height: number,
+): Paper => ({
+  id,
+  name,
+  family: 'US',
+  width: width * INCH_MM,
+  height: height * INCH_MM,
+});
+
+/** Home printer sizes first, then the large sheets a print shop or plotter takes. */
 export const PAPERS: Record<PaperId, Paper> = {
-  a4: { id: 'a4', name: 'A4', width: 210, height: 297 },
-  letter: { id: 'letter', name: 'Letter', width: 215.9, height: 279.4 },
+  a4: iso('a4', 'A4', 210, 297),
+  a3: iso('a3', 'A3', 297, 420),
+  a2: iso('a2', 'A2', 420, 594),
+  a1: iso('a1', 'A1', 594, 841),
+  a0: iso('a0', 'A0', 841, 1189),
+  letter: us('letter', 'Letter', 8.5, 11),
+  legal: us('legal', 'Legal', 8.5, 14),
+  tabloid: us('tabloid', 'Tabloid', 11, 17),
+  'arch-d': us('arch-d', 'Arch D', 24, 36),
 };
+
+export const PAPER_FAMILIES: Array<PaperFamily> = ['ISO', 'US'];
 
 /** Margin on every side, wide enough for any home printer's unprintable edge. */
 export const PAGE_MARGIN_MM = 12;

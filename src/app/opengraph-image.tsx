@@ -8,7 +8,7 @@ export const contentType = 'image/png';
 const Image = () =>
   renderOgCard({
     heading: 'Pattern templates in your size',
-    detail: 'Tiled across A4 or Letter, true to scale.',
+    detail: 'Tiled across A4, Letter or larger, true to scale.',
     shapes: ['cone', 'dome', 'box', 'truncated-cone'],
   });
 

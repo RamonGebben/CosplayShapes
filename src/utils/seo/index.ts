@@ -5,7 +5,7 @@ export const SITE = {
   url: 'https://cosplayshapes.ra-ge.net',
   title: 'CosplayShapes · Free cosplay pattern templates for basic shapes',
   description:
-    'Free pattern templates for cosplay and props. Pick a cone, cylinder, dome, box or pyramid, enter your measurements and print a tiled, true-scale PDF on A4 or Letter, or export an SVG for your cutter. No sign-up, nothing leaves your browser.',
+    'Free pattern templates for cosplay and props. Pick a cone, cylinder, dome, box or pyramid, enter your measurements and print a tiled, true-scale PDF on A4, Letter or a larger sheet, or export an SVG for your cutter. No sign-up, nothing leaves your browser.',
   keywords: [
     'cosplay pattern',
     'cosplay template',
@@ -76,7 +76,7 @@ export const shapeSeo = (slug: ShapeSlug) => {
   return {
     name,
     title: `${name} pattern template for ${uses}`,
-    description: `Free ${lower} pattern maker for cosplay and props: ${uses}. Enter your measurements, allow for foam thickness or seam allowance, and print a tiled, true-scale PDF on A4 or Letter, or export an SVG. No sign-up.`,
+    description: `Free ${lower} pattern maker for cosplay and props: ${uses}. Enter your measurements, allow for foam thickness or seam allowance, and print a tiled, true-scale PDF on A4, Letter or a larger sheet, or export an SVG. No sign-up.`,
     keywords: [
       ...new Set([
         ...keywords,
@@ -89,7 +89,7 @@ export const shapeSeo = (slug: ShapeSlug) => {
 
 const FEATURES = [
   'Patterns from your own measurements, in cm or inches',
-  'True-scale PDF tiled across A4 or Letter pages with alignment marks',
+  'True-scale PDF tiled across A4, Letter, A3, Tabloid or plotter-size pages with alignment marks',
   'SVG export for Cricut, laser and vinyl cutters',
   'Allowance for EVA foam thickness and fabric seam allowance',
   'Free, no account, everything stays in your browser',

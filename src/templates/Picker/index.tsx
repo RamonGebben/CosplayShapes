@@ -29,8 +29,8 @@ export const Picker = ({ previews }: { previews: Array<ShapePreview> }) => (
       </DisplayTitle>
       <Lead>
         Free pattern templates for cosplay and props. Pick a shape, enter your
-        measurements and print it true to scale on A4 or Letter, or send an SVG
-        to your cutter.
+        measurements and print it true to scale on A4, Letter or a larger sheet,
+        or send an SVG to your cutter.
       </Lead>
       <Facts>
         <li>EVA foam, fabric, Worbla, card and cardboard</li>

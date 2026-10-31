@@ -37,6 +37,17 @@ describe('layoutPattern', () => {
     expect(layout.tiles[0].name).toBe('A1');
   });
 
+  it('needs fewer pages on a larger sheet', () => {
+    const pieces = piecesFor('cylinder', {
+      ...base,
+      dims: { circumference: 900, height: 100 },
+    });
+    expect(layoutPattern(pieces, PAPERS.a3).tiles.length).toBeLessThan(
+      layoutPattern(pieces, PAPERS.a4).tiles.length,
+    );
+    expect(layoutPattern(pieces, PAPERS.a0).tiles).toHaveLength(1);
+  });
+
   it('leaves empty grid cells out of the page count', () => {
     const pieces = piecesFor('truncated-cone', {
       ...base,

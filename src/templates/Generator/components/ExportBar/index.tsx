@@ -1,11 +1,11 @@
 'use client';
 
 import { ActionButton } from '~/atoms/ActionButton';
-import { SegmentedControl } from '~/molecules/SegmentedControl';
 import type { PaperId } from '~/utils/layout';
 import { Actions } from './components/Actions';
 import { Bar } from './components/Bar';
 import { Details } from './components/Details';
+import { PaperSelect } from './components/PaperSelect';
 import { Status } from './components/Status';
 import { Summary } from './components/Summary';
 
@@ -52,15 +52,7 @@ export const ExportBar = ({
       </ActionButton>
     </Summary>
     <Actions>
-      <SegmentedControl
-        label="Paper size"
-        options={[
-          { value: 'a4', label: 'A4' },
-          { value: 'letter', label: 'Letter' },
-        ]}
-        value={paper}
-        onChange={onPaper}
-      />
+      <PaperSelect value={paper} onChange={onPaper} />
       <ActionButton
         $variant="primary"
         onClick={onPdf}

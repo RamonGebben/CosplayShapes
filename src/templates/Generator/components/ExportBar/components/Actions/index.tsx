@@ -24,4 +24,11 @@ export const Actions = styled.div`
       flex: 1;
     }
   `}
+
+  /* A phone has no room for the "true scale" tag beside the paper size. */
+  ${({ theme }) => theme.mq.lessThan('mobile')`
+    & > button span {
+      display: none;
+    }
+  `}
 `;
