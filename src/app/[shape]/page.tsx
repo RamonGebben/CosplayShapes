@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { Generator } from '~/templates/Generator';
-import { SHAPES, getShape, isShapeSlug } from '~/utils/shapes';
+import { StructuredData } from '~/atoms/StructuredData';
+import { SITE, shapePath, shapeSeo, webApplicationSchema } from '~/utils/seo';
+import { SHAPES, isShapeSlug } from '~/utils/shapes';
 
 export const generateStaticParams = () =>
   SHAPES.map(shape => ({ shape: shape.slug }));
@@ -12,10 +14,22 @@ export const generateMetadata = async ({
 }: PageProps<'/[shape]'>): Promise<Metadata> => {
   const { shape } = await params;
   if (!isShapeSlug(shape)) return {};
-  const { name } = getShape(shape);
+  const { title, description, keywords } = shapeSeo(shape);
+  const url = shapePath(shape);
   return {
-    title: `${name} pattern`,
-    description: `Enter your measurements and print a true-scale ${name.toLowerCase()} pattern, or export an SVG for your cutter.`,
+    title,
+    description,
+    keywords,
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'website',
+      siteName: SITE.name,
+      title,
+      description,
+      url,
+      locale: 'en',
+    },
+    twitter: { card: 'summary_large_image', title, description },
   };
 };
 
@@ -25,7 +39,12 @@ const ShapeGenerator = async ({
   const { shape } = await params;
   if (!isShapeSlug(shape)) notFound();
   // Keyed so a new shape mounts fresh and the title card wipes in again.
-  return <Generator key={shape} slug={shape} />;
+  return (
+    <>
+      <StructuredData data={webApplicationSchema(shape)} />
+      <Generator key={shape} slug={shape} />
+    </>
+  );
 };
 
 const ShapePage = ({ params }: PageProps<'/[shape]'>) => (

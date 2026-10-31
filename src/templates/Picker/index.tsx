@@ -21,13 +21,14 @@ export const Picker = ({ previews }: { previews: Array<ShapePreview> }) => (
     <Intro>
       <Field aria-hidden="true" />
       <DisplayTitle $size="xl">
-        basic-shape
+        cosplay
         <br />
-        <span>patterns</span>
+        <span>shapes</span>
       </DisplayTitle>
       <Lead>
-        Pick a shape and enter your measurements. Print a pattern that is true
-        to scale on A4 or Letter, or send an SVG to your cutter.
+        Free pattern templates for cosplay and props. Pick a shape, enter your
+        measurements and print it true to scale on A4 or Letter, or send an SVG
+        to your cutter.
       </Lead>
       <Facts>
         <li>EVA foam, fabric, Worbla, card and cardboard</li>

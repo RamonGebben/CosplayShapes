@@ -265,7 +265,7 @@ export const patternPdf = async (
 ) => {
   const doc = await PDFDocument.create();
   doc.setTitle(meta.title);
-  doc.setCreator('basic-shape-patterns');
+  doc.setCreator('CosplayShapes');
   const regular = await doc.embedFont(StandardFonts.Helvetica);
   const bold = await doc.embedFont(StandardFonts.HelveticaBold);
   guidePage(doc, paper, layout, meta, { regular, bold });

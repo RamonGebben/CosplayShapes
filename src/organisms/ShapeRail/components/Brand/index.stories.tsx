@@ -3,7 +3,7 @@ import { Brand } from '.';
 
 const meta = {
   component: Brand,
-  args: { href: '/', children: 'basic-shape' },
+  args: { href: '/', children: 'cosplay' },
 } satisfies Meta<typeof Brand>;
 
 export default meta;

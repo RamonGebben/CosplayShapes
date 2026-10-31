@@ -11,9 +11,9 @@ import { RailList } from './components/RailList';
 export const ShapeRail = ({ active }: { active?: ShapeSlug }) => (
   <Rail aria-label="Shapes">
     <Brand href="/">
-      basic-shape
+      cosplay
       <br />
-      <span>patterns</span>
+      <span>shapes</span>
     </Brand>
     {FAMILIES.map(family => (
       <section key={family.id} aria-labelledby={`rail-${family.id}`}>

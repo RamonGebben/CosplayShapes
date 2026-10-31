@@ -1,8 +1,9 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Atkinson_Hyperlegible, Big_Shoulders } from 'next/font/google';
 import { colorModeScript } from '@pindakaasman/design-system';
 import { StyledComponentsRegistry } from '~/providers/StyledComponentsRegistry';
 import { ThemeProvider } from '~/providers/ThemeProvider';
+import { SITE } from '~/utils/seo';
 
 const atkinson = Atkinson_Hyperlegible({
   variable: '--font-atkinson',
@@ -17,12 +18,34 @@ const bigShoulders = Big_Shoulders({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE.url),
   title: {
-    default: 'basic-shape-patterns',
-    template: '%s · basic-shape-patterns',
+    default: SITE.title,
+    template: `%s · ${SITE.name}`,
   },
-  description:
-    'Free flat patterns for basic shapes. Pick a shape, enter your measurements, print a true-scale PDF or export an SVG for your cutter.',
+  description: SITE.description,
+  keywords: [...SITE.keywords],
+  applicationName: SITE.name,
+  category: 'crafts',
+  alternates: { canonical: '/' },
+  openGraph: {
+    type: 'website',
+    siteName: SITE.name,
+    title: SITE.title,
+    description: SITE.description,
+    url: '/',
+    locale: 'en',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SITE.title,
+    description: SITE.description,
+  },
+  robots: { index: true, follow: true },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#1d2bd6',
 };
 
 const RootLayout = ({ children }: LayoutProps<'/'>) => {

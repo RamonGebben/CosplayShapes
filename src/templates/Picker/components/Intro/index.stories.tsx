@@ -3,7 +3,7 @@ import { Intro } from '.';
 
 const meta = {
   component: Intro,
-  args: { children: 'basic-shape patterns' },
+  args: { children: 'cosplay shapes' },
 } satisfies Meta<typeof Intro>;
 
 export default meta;
