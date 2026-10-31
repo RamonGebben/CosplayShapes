@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eyecatch: Truncated cone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--ultra:#1d2bd6;--mag:#ff3d7f;--yel:#ffd23f;--ground:#f7f7f2;--ink:#121212;--line:#d9d9cf;--mute:#4a4a52}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{background:var(--ground);color:var(--ink);font:15px/1.4 "Atkinson Hyperlegible",system-ui,sans-serif;display:grid;grid-template-columns:232px 360px 1fr;grid-template-rows:900px}
+.title{font-family:"Big Shoulders Display",sans-serif;font-weight:900;text-transform:uppercase;letter-spacing:.01em;line-height:.9}
+nav{background:var(--ultra);color:#fff;padding:28px 20px;display:flex;flex-direction:column;gap:4px}
+nav .brand{font-size:26px;margin-bottom:28px}
+nav .brand span{color:var(--yel)}
+nav h2{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#dfe2ff;margin:14px 0 6px}
+nav a{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none;padding:9px 10px;font-size:15px}
+nav a svg{width:22px;height:22px;flex:none}
+nav a.on{background:var(--mag);font-weight:700}
+nav .foot{margin-top:auto;font-size:13px;color:#dfe2ff}
+.form{border-right:1px solid var(--line);padding:28px 28px;display:flex;flex-direction:column;gap:22px}
+.step{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);display:flex;justify-content:space-between}
+.step b{color:var(--ink)}
+.units{display:grid;grid-template-columns:1fr 1fr;border:1.5px solid var(--ink)}
+.units button{font:inherit;padding:8px;border:0;background:#fff;cursor:pointer}
+.units button.on{background:var(--ink);color:#fff;font-weight:700}
+.row{display:grid;grid-template-columns:1fr 112px 34px;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.row label{font-weight:700}
+.row input,.row select{font:inherit;font-variant-numeric:tabular-nums;text-align:right;padding:7px 9px;border:1.5px solid var(--ink);background:#fff;width:100%}
+.row select{text-align:left;grid-column:2/4}
+.row .u{color:var(--mute);font-variant-numeric:tabular-nums}
+.row input:focus{outline:3px solid var(--mag);outline-offset:0}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px}
+.check input{width:18px;height:18px;accent-color:var(--mag);margin-top:1px}
+.note{font-size:13px;color:var(--mute)}
+.calc{background:#fff;border:1.5px solid var(--ink);padding:12px 14px;font-variant-numeric:tabular-nums;display:grid;grid-template-columns:1fr auto;row-gap:4px;font-size:14px}
+.calc dt{color:var(--mute)}.calc dd{text-align:right;font-weight:700}
+main{position:relative;display:grid;grid-template-rows:1fr 84px}
+.stage{position:relative;overflow:hidden}
+.field{position:absolute;inset:0;background:var(--ultra);clip-path:polygon(0 0,44% 0,30% 100%,0 100%)}
+.field:after{content:"";position:absolute;inset:0;background:var(--mag);clip-path:polygon(43.2% 0,44% 0,30% 100%,29.2% 100%)}
+.cardhead{position:absolute;left:36px;top:30px;color:#fff;z-index:2}
+.cardhead .k{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--yel)}
+.cardhead h1{font-size:84px;margin-top:6px}
+.cardhead p{font-size:15px;margin-top:8px}
+.cone{position:absolute;left:58px;top:290px;width:250px;z-index:2}
+.flat{position:absolute;right:40px;top:96px;width:600px;z-index:2}
+.flathead{position:absolute;right:40px;top:30px;text-align:right;z-index:2}
+.flathead .k{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.flathead .t{font-size:40px;margin-top:4px}
+.legend{position:absolute;right:40px;bottom:26px;display:flex;gap:18px;font-size:13px;color:var(--mute);z-index:2}
+.legend i{display:inline-block;width:22px;height:0;border-top:1.5px solid var(--ink);vertical-align:middle;margin-right:6px}
+.legend i.d{border-top-style:dashed;border-color:var(--mag)}
+.legend i.n{width:2px;height:10px;border:0;background:var(--ink)}
+.grid{position:absolute;inset:0;left:30%;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:36px 36px;opacity:.55}
+.export{border-top:1.5px solid var(--ink);display:flex;align-items:center;gap:22px;padding:0 32px;background:#fff}
+.export .meta{font-variant-numeric:tabular-nums;font-size:14px;color:var(--mute);margin-right:auto}
+.export .meta b{color:var(--ink)}
+.btn{font:700 15px "Atkinson Hyperlegible",sans-serif;padding:12px 20px;border:1.5px solid var(--ink);background:#fff;cursor:pointer}
+.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.primary span{color:var(--yel)}
+</style>
+</head>
+<body>
+<nav aria-label="Shapes">
+  <div class="brand title">basic&#8209;shape<br><span>patterns</span></div>
+  <h2>Round</h2>
+  <a href="#"><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.5"><ellipse cx="11" cy="5" rx="7" ry="2.5"/><path d="M4 5v12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V5"/></svg>Cylinder</a>
+  <a href="#"><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.5"><path d="M11 2 4 17c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5L11 2Z"/></svg>Cone</a>
+  <a href="#" class="on" aria-current="page"><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.5"><ellipse cx="11" cy="5" rx="5" ry="2"/><path d="M6 5 4 17c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5L16 5"/></svg>Truncated cone</a>
+  <a href="#"><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.5"><path d="M3 16a8 8 0 0 1 16 0"/><ellipse cx="11" cy="16" rx="8" ry="2.5"/></svg>Dome</a>
+  <a href="#"><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><ellipse cx="11" cy="11" rx="8" ry="3"/></svg>Sphere</a>
+  <h2>Flat-sided</h2>
+  <a href="#"><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.5"><path d="M4 7l7-4 7 4v9l-7 4-7-4V7Zm0 0 7 4 7-4M11 11v9"/></svg>Box</a>
+  <a href="#"><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.5"><path d="M11 2 3 17l8 3 8-3L11 2Zm0 0v18"/></svg>Pyramid</a>
+  <a href="#"><svg viewBox="0 0 22 22" fill="none" stroke="#fff" stroke-width="1.5"><path d="M6 3h10l4 4v10l-4 2H6l-4-2V7l4-4Zm0 0v16M16 3v16"/></svg>Prism</a>
+  <p class="foot">Free. Prints at 100%.</p>
+</nav>
+
+<section class="form" aria-label="Pattern settings">
+  <div class="units" role="group" aria-label="Units"><button class="on">Metric (cm)</button><button>Imperial (in)</button></div>
+  <div>
+    <div class="step"><span>1 · Size</span><b>Bracer</b></div>
+    <div class="row"><label for="tc">Top circumference</label><input id="tc" value="26.0"><span class="u">cm</span></div>
+    <div class="row"><label for="bc">Bottom circumference</label><input id="bc" value="32.0"><span class="u">cm</span></div>
+    <div class="row"><label for="h">Height</label><input id="h" value="18.0"><span class="u">cm</span></div>
+  </div>
+  <div>
+    <div class="step"><span>2 · Material</span><b>EVA foam</b></div>
+    <div class="row"><label for="m">Material</label><select id="m"><option>EVA foam</option><option>Fabric</option><option>Worbla</option><option>Cardstock</option><option>Cardboard</option></select></div>
+    <div class="row"><label for="t">Thickness</label><input id="t" value="6"><span class="u">mm</span></div>
+  </div>
+  <label class="check"><input type="checkbox" checked><span><b>Compensate for thickness</b><br><span class="note">Measurements are taken on the outside surface; the pattern is drawn on the inner face.</span></span></label>
+  <label class="check"><input type="checkbox"><span><b>Seam allowance</b><br><span class="note">Off for foam; cut edges are butted and glued.</span></span></label>
+  <dl class="calc"><dt>Slant height</dt><dd>18.03 cm</dd><dt>Arc angle</dt><dd>19.1°</dd><dt>Outer radius</dt><dd>96.1 cm</dd></dl>
+</section>
+
+<main>
+  <div class="stage">
+    <div class="field"></div>
+    <div class="grid"></div>
+    <div class="cardhead"><div class="k">Shape 03 · Round</div><h1 class="title">Truncated<br>cone</h1><p>Ø 8.3 → 10.2 cm · 18 cm tall</p></div>
+    <svg class="cone" viewBox="0 0 250 380" aria-label="3D preview of the truncated cone">
+      <path d="M58 40 18 330 A107 32 0 0 0 232 330 L192 40Z" fill="#ffd23f"/>
+      <path d="M125 40 125 362 A107 32 0 0 0 232 330 L192 40 A67 20 0 0 1 125 60Z" fill="#e8b417"/>
+      <path d="M150 40 150 360 A107 32 0 0 0 232 330 L192 40Z" fill="#c99a0c"/>
+      <ellipse cx="125" cy="40" rx="67" ry="20" fill="#121212"/>
+      <ellipse cx="125" cy="40" rx="67" ry="20" fill="none" stroke="#fff" stroke-width="2"/>
+      <path d="M18 330 58 40M232 330 192 40" stroke="#121212" stroke-width="2.5" fill="none"/>
+      <path d="M18 330A107 32 0 0 0 232 330" stroke="#121212" stroke-width="2.5" fill="none"/>
+      <path d="M96 52 70 352" stroke="#ff3d7f" stroke-width="2" stroke-dasharray="6 5"/>
+    </svg>
+    <div class="flathead"><div class="k">Flat pattern · 1 piece · inner face</div><div class="t title">Piece A</div></div>
+    <svg class="flat" viewBox="0 0 600 430" aria-label="Flat pattern: annular sector">
+      <path d="M13 94A1730 1730 0 0 1 587 94L533.3 413.6A1406 1406 0 0 0 66.7 413.6Z" fill="#fff" stroke="#121212" stroke-width="1.5"/>
+      <path d="M31 99 82 405M569 99 518 405" stroke="#ff3d7f" stroke-width="1.5" stroke-dasharray="7 5"/>
+      <path d="M300 70v14M300 394v-14M156 77v13M444 77v13M183 399v-12M417 399v-12" stroke="#121212" stroke-width="2"/>
+      <text x="300" y="250" text-anchor="middle" font-family="Atkinson Hyperlegible" font-size="15" font-weight="700" fill="#121212">A · cut 1 · EVA 6 mm</text>
+      <text x="300" y="272" text-anchor="middle" font-family="Atkinson Hyperlegible" font-size="13" fill="#5c5c66">Outer arc 31.6 cm · inner arc 25.6 cm</text>
+      <path d="M300 300v40M290 310l10-10 10 10" stroke="#121212" stroke-width="1.2" fill="none"/>
+    </svg>
+    <div class="legend"><span><i></i>Cut line</span><span><i class="d"></i>Glue edge</span><span><i class="n"></i>Alignment notch</span></div>
+  </div>
+  <div class="export">
+    <p class="meta"><b>1 piece</b> · fits on <b>2 × A4</b> pages, tiled · 4 notches</p>
+    <button class="btn">SVG for cutter</button>
+    <button class="btn">Paper: A4 ▾</button>
+    <button class="btn primary">Download PDF <span>· true scale</span></button>
+  </div>
+</main>
+</body>
+</html>

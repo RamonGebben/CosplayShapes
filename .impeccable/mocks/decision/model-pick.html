@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Kit Manual — Dome</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&family=Archivo+Narrow:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--w:#ffffff;--k:#1a1a1a;--r:#d42a1e;--b:#2b6fd6;--g:#c9ccd1;--g2:#eef0f2}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden;background:var(--w);color:var(--k);font:400 14px/1.4 Archivo,system-ui,sans-serif}
+header{height:64px;display:flex;align-items:center;gap:32px;padding:0 28px;border-bottom:2px solid var(--k)}
+.brand{font:700 18px 'Archivo Narrow';letter-spacing:.02em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.brand i{display:inline-block;width:22px;height:22px;background:var(--r)}
+nav{display:flex;height:100%}
+nav a{display:flex;align-items:center;gap:8px;padding:0 18px;color:var(--k);text-decoration:none;font-weight:500;border-bottom:4px solid transparent;margin-bottom:-2px}
+nav a.on{border-color:var(--r);font-weight:700}
+nav a span{font:600 11px 'Archivo Narrow';color:#555}
+.units{margin-left:auto;display:flex;border:1.5px solid var(--k)}
+.units button{border:0;background:var(--w);padding:6px 14px;font:600 13px Archivo}
+.units button.on{background:var(--k);color:var(--w)}
+main{display:grid;grid-template-columns:340px 1fr;height:836px}
+aside{border-right:2px solid var(--k);padding:24px 28px;display:flex;flex-direction:column;gap:22px}
+.step{display:flex;gap:12px;align-items:flex-start}
+.num{flex:none;width:28px;height:28px;border:2px solid var(--k);font:700 15px 'Archivo Narrow';display:grid;place-items:center}
+.step.cur .num{background:var(--k);color:var(--w)}
+.step h3{font:700 13px 'Archivo Narrow';text-transform:uppercase;letter-spacing:.06em;margin:5px 0 10px}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+label{font-size:12px;font-weight:600}
+.in{display:flex;align-items:center;border:1.5px solid var(--k);height:38px;width:244px}
+.in input,.in select{border:0;flex:1;height:100%;padding:0 10px;font:500 15px Archivo;font-variant-numeric:tabular-nums;background:transparent}
+.in em{font-style:normal;padding:0 10px;color:#555;font-size:13px;border-left:1px solid var(--g);height:100%;display:flex;align-items:center}
+.check{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500}
+.check input{width:16px;height:16px;accent-color:var(--b)}
+.note{font-size:12px;color:#555;background:var(--g2);padding:8px 10px;border-left:3px solid var(--b);width:244px}
+.stage{display:grid;grid-template-rows:auto 1fr auto;padding:22px 28px 0}
+.stagehead{display:flex;align-items:baseline;gap:16px;margin-bottom:14px}
+.stagehead h1{font:700 30px 'Archivo Narrow';text-transform:uppercase}
+.stagehead p{color:#555}
+.stagehead .tag{margin-left:auto;font:600 12px Archivo;background:var(--b);color:var(--w);padding:4px 10px}
+.views{display:grid;grid-template-columns:1.25fr 1fr;gap:20px;min-height:0}
+.panel{border:2px solid var(--k);position:relative;display:flex;flex-direction:column}
+.ptitle{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-bottom:2px solid var(--k);font:700 13px 'Archivo Narrow';text-transform:uppercase;letter-spacing:.06em}
+.ptitle span{font:500 12px Archivo;text-transform:none;letter-spacing:0;color:#555}
+.panel svg{flex:1;width:100%}
+.legend{display:flex;gap:18px;padding:8px 14px;border-top:1px solid var(--g);font-size:12px;color:#444}
+.legend b{display:inline-block;width:18px;border-top:2px solid var(--k);vertical-align:middle;margin-right:6px}
+.legend b.d{border-top:2px dashed var(--b)}
+.legend b.n{width:8px;height:8px;border:0;background:var(--r)}
+footer{display:flex;align-items:center;gap:12px;padding:16px 0 20px}
+footer .sum{font-size:13px;color:#444;margin-right:auto;font-variant-numeric:tabular-nums}
+footer .sum strong{color:var(--k)}
+.btn{height:42px;padding:0 18px;border:2px solid var(--k);background:var(--w);font:600 14px Archivo;display:flex;align-items:center;gap:8px}
+.btn.pri{background:var(--r);border-color:var(--r);color:var(--w)}
+.btn small{font-weight:500;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><i></i>Basic Shape Patterns</div>
+  <nav>
+    <a href="#">Cylinder <span>A</span></a>
+    <a href="#">Cone <span>B</span></a>
+    <a href="#" class="on">Dome <span>C</span></a>
+    <a href="#">Sphere <span>D</span></a>
+    <a href="#">Box <span>E</span></a>
+    <a href="#">Pyramid <span>F</span></a>
+    <a href="#">Prism <span>G</span></a>
+  </nav>
+  <div class="units"><button class="on">cm</button><button>in</button></div>
+</header>
+<main>
+  <aside>
+    <div class="step"><div class="num">1</div><div>
+      <h3>Size</h3>
+      <div class="field"><label for="d">Diameter (outside)</label><div class="in"><input id="d" value="24.0"><em>cm</em></div></div>
+      <div class="field"><label for="h">Height</label><div class="in"><select id="h"><option>Half sphere (12.0 cm)</option></select></div></div>
+    </div></div>
+    <div class="step"><div class="num">2</div><div>
+      <h3>Pieces</h3>
+      <div class="field"><label for="g">Number of gores</label><div class="in"><input id="g" value="8"><em>pcs</em></div></div>
+    </div></div>
+    <div class="step cur"><div class="num">3</div><div>
+      <h3>Material</h3>
+      <div class="field"><label for="m">Material</label><div class="in"><select id="m"><option>EVA foam</option></select></div></div>
+      <div class="field"><label for="t">Thickness</label><div class="in"><input id="t" value="4"><em>mm</em></div></div>
+      <label class="check"><input type="checkbox" checked> Compensate for thickness</label>
+      <p class="note" style="margin-top:10px">Gores sized to the foam's mid-line so the outside lands at 24.0 cm.</p>
+    </div></div>
+    <div class="step"><div class="num">4</div><div>
+      <h3>Seam allowance</h3>
+      <label class="check"><input type="checkbox"> Add allowance (fabric)</label>
+    </div></div>
+  </aside>
+  <section class="stage">
+    <div class="stagehead"><h1>Dome — helmet</h1><p>Ø 24.0 cm · 8 gores · EVA 4 mm</p><span class="tag">Parts C1–C8</span></div>
+    <div class="views">
+      <div class="panel">
+        <div class="ptitle">Parts sheet <span>Each gore 9.27 × 18.54 cm</span></div>
+        <svg viewBox="0 0 560 420" aria-label="Eight gore pieces on a parts runner">
+          <defs><path id="gore" d="M0 170 C 12 110, 22 50, 0 0 C -22 50, -12 110, 0 170 Z" transform="scale(1)"/>
+          <path id="g2" d="M-22 170 Q -28 70 0 0 Q 28 70 22 170 Z"/></defs>
+          <rect x="14" y="18" width="532" height="384" fill="none" stroke="#c9ccd1" stroke-width="10"/>
+          <line x1="14" y1="210" x2="546" y2="210" stroke="#c9ccd1" stroke-width="6"/>
+          <g fill="#eef0f2" stroke="#1a1a1a" stroke-width="1.5">
+            <use href="#g2" x="78" y="30"/><use href="#g2" x="208" y="30"/><use href="#g2" x="338" y="30"/><use href="#g2" x="468" y="30"/>
+            <use href="#g2" x="78" y="222"/><use href="#g2" x="208" y="222"/><use href="#g2" x="338" y="222"/><use href="#g2" x="468" y="222"/>
+          </g>
+          <g stroke="#2b6fd6" stroke-dasharray="4 3" stroke-width="1.2"><line x1="78" y1="40" x2="78" y2="196"/><line x1="208" y1="40" x2="208" y2="196"/><line x1="338" y1="40" x2="338" y2="196"/><line x1="468" y1="40" x2="468" y2="196"/><line x1="78" y1="232" x2="78" y2="388"/><line x1="208" y1="232" x2="208" y2="388"/><line x1="338" y1="232" x2="338" y2="388"/><line x1="468" y1="232" x2="468" y2="388"/></g>
+          <g fill="#e8382b"><rect x="70" y="140" width="5" height="5"/><rect x="200" y="140" width="5" height="5"/><rect x="330" y="140" width="5" height="5"/><rect x="460" y="140" width="5" height="5"/><rect x="70" y="332" width="5" height="5"/><rect x="200" y="332" width="5" height="5"/><rect x="330" y="332" width="5" height="5"/><rect x="460" y="332" width="5" height="5"/></g>
+          <g font-family="Archivo Narrow" font-weight="700" font-size="15" fill="#1a1a1a">
+            <text x="110" y="120">C1</text><text x="240" y="120">C2</text><text x="370" y="120">C3</text><text x="500" y="120">C4</text>
+            <text x="110" y="312">C5</text><text x="240" y="312">C6</text><text x="370" y="312">C7</text><text x="500" y="312">C8</text>
+          </g>
+        </svg>
+        <div class="legend"><span><b></b>Cut line</span><span><b class="d"></b>Grain / centre</span><span><b class="n"></b>Notch: match neighbour</span></div>
+      </div>
+      <div class="panel">
+        <div class="ptitle">Assembly <span>Drag to rotate</span></div>
+        <svg viewBox="0 0 440 420" aria-label="Exploded dome assembly with numbered steps">
+          <ellipse cx="220" cy="330" rx="150" ry="34" fill="none" stroke="#c9ccd1" stroke-width="2" stroke-dasharray="6 4"/>
+          <path d="M70 300 Q 80 140 220 110 Q 360 140 370 300 Q 220 340 70 300Z" fill="#eef0f2" stroke="#1a1a1a" stroke-width="2"/>
+          <path d="M220 110 Q 150 190 140 316 M220 110 Q 200 200 200 326 M220 110 Q 260 200 270 326 M220 110 Q 310 180 320 312" fill="none" stroke="#1a1a1a" stroke-width="1.2"/>
+          <path d="M70 300 Q 80 140 220 110 Q 150 190 140 316 Q 100 310 70 300Z" fill="#c9ccd1" stroke="#1a1a1a" stroke-width="1.5"/>
+          <g transform="translate(-58,-30)"><path d="M380 290 Q 392 160 300 120 Q 352 200 360 300Z" fill="#fff" stroke="#e8382b" stroke-width="2"/></g>
+          <path d="M318 150 Q 345 135 340 120" fill="none" stroke="#e8382b" stroke-width="2"/><path d="M290 120 l14 -10 l2 16z" fill="#e8382b"/>
+          <g font-family="Archivo Narrow" font-weight="700"><rect x="342" y="72" width="30" height="30" fill="#1a1a1a"/><text x="351" y="93" fill="#fff" font-size="17">1</text>
+          <text x="382" y="88" font-size="13" fill="#1a1a1a">Glue C1 to C2</text><text x="382" y="104" font-size="12" font-family="Archivo" font-weight="400" fill="#555">along the notch</text></g>
+          <g font-family="Archivo Narrow" font-weight="700"><rect x="30" y="72" width="30" height="30" fill="none" stroke="#1a1a1a" stroke-width="2"/><text x="39" y="93" fill="#1a1a1a" font-size="17">2</text>
+          <text x="70" y="88" font-size="13" fill="#1a1a1a">Pairs → halves</text></g>
+          <g font-family="Archivo Narrow" font-weight="700"><rect x="30" y="372" width="30" height="30" fill="none" stroke="#1a1a1a" stroke-width="2"/><text x="39" y="393" fill="#1a1a1a" font-size="17">3</text>
+          <text x="70" y="392" font-size="13" fill="#1a1a1a">Close the dome, check Ø 24.0 cm</text></g>
+          <text x="105" y="250" font-family="Archivo Narrow" font-weight="700" font-size="14">C1</text>
+        </svg>
+      </div>
+    </div>
+    <footer>
+      <p class="sum"><strong>8 parts</strong> · fits on <strong>2 × A4</strong> at 100% · includes a 5 cm calibration square</p>
+      <button class="btn">SVG <small>for cutters</small></button>
+      <button class="btn">Tiled PDF <small>A4 · 2 pages</small></button>
+      <button class="btn pri">Download PDF <small>true scale</small></button>
+    </footer>
+  </section>
+</main>
+</body>
+</html>

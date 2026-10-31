@@ -1,0 +1,446 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-31T10:04:59+00:00",
+  "title": "Design System: Cosplay Shapes",
+  "extensions": {
+    "colorMeta": {
+      "ultramarine-field": {
+        "role": "primary",
+        "displayName": "Ultramarine Field",
+        "canonical": "#1d2bd6",
+        "oklch": "oklch(43.3% 0.249 267)",
+        "tonalRamp": [
+          "#050a1b",
+          "#122050",
+          "#1f3692",
+          "#2d4dda",
+          "#4973ff",
+          "#7a9fff",
+          "#afc8ff",
+          "#e3eeff"
+        ]
+      },
+      "ultramarine-pale": {
+        "role": "primary",
+        "displayName": "Pale Ultramarine",
+        "canonical": "#dfe2ff",
+        "oklch": "oklch(91.9% 0.040 281)",
+        "tonalRamp": [
+          "#0b0b0e",
+          "#24242c",
+          "#3f414f",
+          "#5d5f75",
+          "#7e8097",
+          "#a2a4b5",
+          "#c7c8d3",
+          "#edeef2"
+        ]
+      },
+      "seam-magenta": {
+        "role": "secondary",
+        "displayName": "Seam Magenta",
+        "canonical": "#ff3d7f",
+        "oklch": "oklch(66.9% 0.230 6)",
+        "tonalRamp": [
+          "#170509",
+          "#440d1f",
+          "#7a0c36",
+          "#b4004f",
+          "#dd3a70",
+          "#ee7c97",
+          "#f9b3c1",
+          "#ffe5eb"
+        ]
+      },
+      "seam-magenta-deep": {
+        "role": "secondary",
+        "displayName": "Deep Magenta",
+        "canonical": "#c2185b",
+        "oklch": "oklch(53.1% 0.202 6)",
+        "tonalRamp": [
+          "#160609",
+          "#411220",
+          "#741a38",
+          "#ac2053",
+          "#d44973",
+          "#e6829a",
+          "#f4b6c2",
+          "#ffe7eb"
+        ]
+      },
+      "highlight-yellow": {
+        "role": "tertiary",
+        "displayName": "Highlight Yellow",
+        "canonical": "#ffd23f",
+        "oklch": "oklch(87.9% 0.162 91)",
+        "tonalRamp": [
+          "#0f0b02",
+          "#302300",
+          "#563e00",
+          "#7f5b00",
+          "#a27d00",
+          "#bca357",
+          "#d7c89e",
+          "#f4eedd"
+        ]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Ground",
+        "canonical": "#f7f7f2",
+        "oklch": "oklch(97.5% 0.007 107)",
+        "tonalRamp": [
+          "#0b0b08",
+          "#252522",
+          "#42423e",
+          "#61615d",
+          "#83837e",
+          "#a5a5a1",
+          "#c9c9c5",
+          "#efefea"
+        ]
+      },
+      "paper-white": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "canonical": "#ffffff",
+        "oklch": "oklch(100.0% 0.000 90)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#121212",
+        "oklch": "oklch(18.2% 0.000 90)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Muted Ink",
+        "canonical": "#4a4a52",
+        "oklch": "oklch(41.2% 0.013 286)",
+        "tonalRamp": [
+          "#0b0a11",
+          "#24242b",
+          "#414149",
+          "#606069",
+          "#81818a",
+          "#a4a4ad",
+          "#c8c8d2",
+          "#ededf7"
+        ]
+      },
+      "rule-grey": {
+        "role": "neutral",
+        "displayName": "Rule Grey",
+        "canonical": "#d9d9cf",
+        "oklch": "oklch(88.3% 0.013 107)",
+        "tonalRamp": [
+          "#0c0c06",
+          "#26261e",
+          "#43433a",
+          "#626259",
+          "#83837a",
+          "#a6a69c",
+          "#cacac0",
+          "#efefe5"
+        ]
+      },
+      "error-red": {
+        "role": "error",
+        "displayName": "Error Red",
+        "canonical": "#c0122f",
+        "oklch": "oklch(51.6% 0.200 22)",
+        "tonalRamp": [
+          "#160606",
+          "#421315",
+          "#761c23",
+          "#af2331",
+          "#d74c52",
+          "#e88482",
+          "#f5b7b4",
+          "#ffe7e6"
+        ]
+      },
+      "error-tint": {
+        "role": "error",
+        "displayName": "Error Tint",
+        "canonical": "#fde8ec",
+        "oklch": "oklch(94.9% 0.023 4)",
+        "tonalRamp": [
+          "#0d0b0b",
+          "#292324",
+          "#493f41",
+          "#6c5d60",
+          "#8e7d81",
+          "#aea1a4",
+          "#cec7c8",
+          "#f1edee"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Stage shape name and picker brand title; uppercase, balanced, sized from the longest word on the stage. Responsive: 52 / 64 / 72 / 88px."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Picker family headings and the stage's flat-pattern heading. Responsive: 30 / 34 / 36 / 40px."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Form section titles and shape-tile names, uppercase. Responsive: 20 / 22 / 22 / 24px."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All UI text; 16px below 1024px, 15px above."
+      },
+      "body-strong": {
+        "displayName": "Body Strong",
+        "purpose": "Field labels, buttons, the selected segment and the active rail link."
+      },
+      "small": {
+        "displayName": "Small",
+        "purpose": "Hints, examples and the line legend, in muted ink."
+      },
+      "label": {
+        "displayName": "Rail Group Label",
+        "purpose": "Only the Round / Flat-sided group labels in the shape rail; uppercase, tracked."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-expo-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The title-card wipe and title slide."
+      },
+      {
+        "name": "wipe",
+        "value": "620ms",
+        "purpose": "Diagonal clip-path wipe of the field and magenta edge on shape change; off under reduced motion and below 1024px."
+      },
+      {
+        "name": "title-enter",
+        "value": "520ms, 140ms delay, translateX(-24px) to 0",
+        "purpose": "Stage title slide-in; off under reduced motion."
+      },
+      {
+        "name": "hover",
+        "value": "150ms ease-out",
+        "purpose": "Background and colour changes on hover, fine pointers only."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "600px"
+      },
+      {
+        "name": "tablet",
+        "value": "768px"
+      },
+      {
+        "name": "tabletLandscape",
+        "value": "1024px",
+        "note": "Layout stacks to one column below this."
+      },
+      {
+        "name": "desktop",
+        "value": "1440px"
+      }
+    ],
+    "lines": [
+      {
+        "name": "hairline",
+        "value": "1 / devicePixelRatio CSS px, non-scaling stroke",
+        "purpose": "Cut line, notches, guides and grid."
+      },
+      {
+        "name": "guide-dash",
+        "value": "5 4",
+        "purpose": "Ultramarine stitch and fold guides."
+      },
+      {
+        "name": "lit-seam",
+        "value": "3 hairlines, round caps, seam magenta",
+        "purpose": "The edited seam."
+      },
+      {
+        "name": "page-edge",
+        "value": "dotted 1 5 at 2 hairlines, muted ink",
+        "purpose": "Print tile boundaries."
+      },
+      {
+        "name": "grid",
+        "value": "10mm (cm) or 25.4mm (in), rule grey hairline",
+        "purpose": "True-scale grid behind pieces."
+      },
+      {
+        "name": "control-border",
+        "value": "1.5px solid ink",
+        "purpose": "Buttons, inputs, selects, segments, tiles, export bar rule."
+      },
+      {
+        "name": "focus",
+        "value": "3px solid seam magenta, offset 2px (0 on inputs)",
+        "purpose": "Global focus ring; yellow on the ultramarine rail."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ink action for the one primary task (Download PDF); the format word turns yellow.",
+      "html": "<button class=\"ds-btn-primary\">Download <span>PDF</span></button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border:1.5px solid #121212;border-radius:0;background:#121212;color:#ffffff;font-family:'Atkinson Hyperlegible', system-ui, sans-serif;font-size:15px;font-weight:700;white-space:nowrap;cursor:pointer;transition:background-color .15s ease-out,color .15s ease-out}.ds-btn-primary span{color:#ffd23f}.ds-btn-primary:hover{background:#1d2bd6;border-color:#1d2bd6}.ds-btn-primary:focus-visible{outline:3px solid #ff3d7f;outline-offset:2px}.ds-btn-primary:disabled{opacity:.6;cursor:progress}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "White ruled action for secondary exports such as SVG for cutter.",
+      "html": "<button class=\"ds-btn-secondary\">SVG for cutter</button>",
+      "css": ".ds-btn-secondary{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border:1.5px solid #121212;border-radius:0;background:#ffffff;color:#121212;font-family:'Atkinson Hyperlegible', system-ui, sans-serif;font-size:15px;font-weight:700;white-space:nowrap;cursor:pointer;transition:background-color .15s ease-out}.ds-btn-secondary:hover{background:#ffd23f}.ds-btn-secondary:focus-visible{outline:3px solid #ff3d7f;outline-offset:2px}"
+    },
+    {
+      "name": "Measurement Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "One decision per line: bold label, right-aligned tabular input, unit.",
+      "html": "<div class=\"ds-field-row\"><label class=\"ds-field-label\" for=\"ds-h\">Height</label><input class=\"ds-input\" id=\"ds-h\" value=\"12.5\"><span class=\"ds-field-unit\">cm</span></div>",
+      "css": ".ds-field-row{display:grid;grid-template-columns:1fr 112px 34px;align-items:center;column-gap:10px;padding:9px 0;border-bottom:1px solid #d9d9cf;font-family:'Atkinson Hyperlegible', system-ui, sans-serif;font-size:15px;color:#121212}.ds-field-label{font-weight:700}.ds-field-unit{color:#4a4a52}.ds-input{width:100%;padding:7px 9px;border:1.5px solid #121212;border-radius:0;background:#ffffff;color:#121212;font:inherit;font-variant-numeric:tabular-nums;text-align:right}.ds-input:focus-visible{outline:3px solid #ff3d7f;outline-offset:0}.ds-input[aria-invalid=true]{border-color:#c0122f;background:#fde8ec}"
+    },
+    {
+      "name": "Segmented Control",
+      "kind": "chip",
+      "refersTo": "segment-selected",
+      "description": "Two-to-four-way choice (unit switch) in one ink-ruled box; the chosen cell is solid ink.",
+      "html": "<div class=\"ds-segments\"><button class=\"ds-segment\" aria-pressed=\"true\">cm</button><button class=\"ds-segment\" aria-pressed=\"false\">in</button></div>",
+      "css": ".ds-segments{display:grid;grid-template-columns:repeat(2,1fr);border:1.5px solid #121212;width:160px;font-family:'Atkinson Hyperlegible', system-ui, sans-serif;font-size:15px}.ds-segment{padding:8px 10px;border:0;border-radius:0;background:#ffffff;color:#121212;font:inherit;cursor:pointer}.ds-segment[aria-pressed=true]{background:#121212;color:#ffffff;font-weight:700}.ds-segment[aria-pressed=false]:hover{background:#ffd23f}.ds-segment:focus-visible{position:relative;outline:3px solid #ff3d7f;outline-offset:-3px}"
+    },
+    {
+      "name": "Shape Rail",
+      "kind": "nav",
+      "refersTo": "rail-link-active",
+      "description": "Ultramarine navigation column; the current shape is filled magenta.",
+      "html": "<nav class=\"ds-rail\"><a class=\"ds-brand\" href=\"#\">Cosplay <span>Shapes</span></a><h2 class=\"ds-rail-group\">Round</h2><a class=\"ds-rail-link\" href=\"#\" aria-current=\"page\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 22 22\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linejoin=\"round\"><path d=\"M11 2 4 16.5c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5L11 2Z\"/></svg>Cone</a><a class=\"ds-rail-link\" href=\"#\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 22 22\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linejoin=\"round\"><path d=\"M4 5.5a7 2.5 0 1 0 14 0a7 2.5 0 1 0 -14 0M4 5.5v11c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-11\"/></svg>Cylinder</a></nav>",
+      "css": ".ds-rail{display:flex;flex-direction:column;width:232px;padding:28px 16px 24px;background:#1d2bd6;color:#ffffff;font-family:'Atkinson Hyperlegible', system-ui, sans-serif;font-size:15px}.ds-brand{display:block;margin:0 4px 12px;font-family:'Big Shoulders', Impact, sans-serif;font-size:28px;font-weight:900;line-height:.88;text-transform:uppercase;color:inherit;text-decoration:none}.ds-brand span{color:#ffd23f}.ds-rail-group{margin:12px 4px 6px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#dfe2ff}.ds-rail-link{display:flex;align-items:center;gap:12px;padding:9px 10px;color:inherit;text-decoration:none;transition:background-color .15s ease-out}.ds-rail-link[aria-current=page]{background:#ff3d7f;color:#121212;font-weight:700}.ds-rail-link:not([aria-current=page]):hover{background:#ffffff;color:#1d2bd6}.ds-rail-link:focus-visible{outline:3px solid #ffd23f;outline-offset:-3px}"
+    },
+    {
+      "name": "Shape Tile",
+      "kind": "card",
+      "refersTo": "shape-tile",
+      "description": "Picker tile: the flat pattern thumbnail, the shape name in title caps, an example line.",
+      "html": "<a class=\"ds-tile\" href=\"#\"><svg viewBox=\"0 0 120 70\" width=\"100%\" height=\"70\"><path d=\"M10 60 L60 8 L110 60 Z\" fill=\"#ffffff\" stroke=\"#121212\" stroke-width=\"1\"/><path d=\"M18 56 L60 14 L102 56 Z\" fill=\"none\" stroke=\"#1d2bd6\" stroke-width=\"1\" stroke-dasharray=\"5 4\"/></svg><span class=\"ds-tile-name\">Cone</span><span class=\"ds-tile-example\">Horns, hats, spikes</span></a>",
+      "css": ".ds-tile{display:grid;gap:4px;width:240px;padding:14px 16px 16px;border:1.5px solid #121212;border-radius:0;background:#ffffff;color:#121212;text-decoration:none;font-family:'Atkinson Hyperlegible', system-ui, sans-serif;transition:background-color .15s ease-out}.ds-tile:hover{background:#ffd23f}.ds-tile:focus-visible{outline:3px solid #ff3d7f;outline-offset:2px}.ds-tile-name{font-family:'Big Shoulders', Impact, sans-serif;font-size:24px;font-weight:900;line-height:1;text-transform:uppercase}.ds-tile-example{font-size:13px;color:#4a4a52}"
+    },
+    {
+      "name": "Title-Card Stage",
+      "kind": "custom",
+      "refersTo": "ultramarine-field",
+      "description": "Signature: the ultramarine field cut by one hard diagonal with a magenta edge, the shape name in display caps, wiping in once on shape change.",
+      "html": "<section class=\"ds-stage\"><div class=\"ds-stage-field\"></div><h1 class=\"ds-stage-title\">Truncated cone</h1></section>",
+      "css": ".ds-stage{position:relative;height:260px;overflow:hidden;background:#f7f7f2;font-family:'Big Shoulders', Impact, sans-serif}.ds-stage-field{position:absolute;inset:0;background:#1d2bd6;clip-path:polygon(0 0,44% 0,30% 100%,0 100%);animation:ds-wipe 620ms cubic-bezier(.16,1,.3,1) both}.ds-stage-field::after{content:'';position:absolute;inset:0;background:#ff3d7f;clip-path:polygon(43.3% 0,44% 0,30% 100%,29.3% 100%)}.ds-stage-title{position:absolute;top:30px;left:36px;max-width:40%;margin:0;color:#ffffff;font-size:48px;font-weight:900;line-height:.88;letter-spacing:.01em;text-transform:uppercase;text-wrap:balance;animation:ds-enter 520ms cubic-bezier(.16,1,.3,1) 140ms both}@keyframes ds-wipe{from{clip-path:polygon(0 0,0 0,-14% 100%,-14% 100%)}to{clip-path:polygon(0 0,44% 0,30% 100%,0 100%)}}@keyframes ds-enter{from{transform:translateX(-24px);opacity:0}to{transform:none;opacity:1}}@media (prefers-reduced-motion:reduce){.ds-stage-field,.ds-stage-title{animation:none}}"
+    },
+    {
+      "name": "Pattern Line Legend",
+      "kind": "custom",
+      "refersTo": "ink",
+      "description": "The on-screen line language: ink cut, ultramarine dashed guide, magenta lit seam, dotted page edge.",
+      "html": "<ul class=\"ds-legend\"><li><i class=\"ds-sw\"></i>Cut</li><li><i class=\"ds-sw ds-sw-guide\"></i>Stitch / fold</li><li><i class=\"ds-sw ds-sw-lit\"></i>Edited seam</li><li><i class=\"ds-sw ds-sw-pages\"></i>Page edge</li></ul>",
+      "css": ".ds-legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0;padding:0;list-style:none;font-family:'Atkinson Hyperlegible', system-ui, sans-serif;font-size:13px;color:#4a4a52}.ds-legend li{display:flex;align-items:center;gap:8px}.ds-sw{display:inline-block;width:22px;height:0;border-top:1px solid #121212}.ds-sw-guide{border-top:1px dashed #1d2bd6}.ds-sw-lit{border-top:3px solid #ff3d7f}.ds-sw-pages{border-top:2px dotted #4a4a52}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Act-Break Title Card",
+    "overview": "Every shape is presented like an anime eyecatch: a flat ultramarine field cut by one hard diagonal, a magenta edge running along the cut, the shape's name in condensed heavy caps, the finished cel-shaded form on one side and its flat pattern on the other. The world is flat colour, black ink and white paper. There are no gradients, no glass and no soft depth; depth comes from the diagonal and from the cel shading of the model.\n\nUnderneath the graphic shell the tool is a cutting-table instrument. Pattern lines are drawn one device pixel wide over a true-scale grid, numbers sit in tabular figures, and the form gives one decision per line using standard web controls. The loud parts (field, title, magenta seam) frame the work; the quiet parts (ink lines on white paper on an off-white ground) are the work.\n\nThe system is light only. Patterns get checked against white paper on a cutting table, so there is no dark mode and none should be added.",
+    "keyCharacteristics": [
+      "One hard diagonal splits an ultramarine field from the off-white ground, edged by a thin magenta band.",
+      "Condensed heavy uppercase display type (Big Shoulders 900) against a hyperlegible UI face (Atkinson Hyperlegible 400/700).",
+      "Zero radius everywhere; controls are ruled in 1.5px ink.",
+      "Pattern geometry is drawn in one-device-pixel lines at true proportion over a 1 cm or 1 in grid.",
+      "One authored motion: the diagonal wipe when the shape changes."
+    ],
+    "rules": [
+      {
+        "name": "The Magenta Means Here Rule",
+        "body": "Magenta marks exactly one thing per context: the current shape, the seam being edited, the focused control, or the diagonal edge. It never fills a button or decorates.",
+        "section": "colors"
+      },
+      {
+        "name": "The Flat Ink Rule",
+        "body": "Colour is applied as flat fills. Fields are a single colour cut by `clip-path`; no gradients, tints or transparency washes.",
+        "section": "colors"
+      },
+      {
+        "name": "The Longest Word Rule",
+        "body": "The stage title is sized from its longest word (about half an em per letter, capped by the xl size and the container width) so every word clears the diagonal. Do not let display type cross the cut.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Figures Rule",
+        "body": "Anywhere only values change (inputs, the stage summary readout), use tabular figures so columns don't jitter as the maker types.",
+        "section": "typography"
+      },
+      {
+        "name": "The Sticky Print Rule",
+        "body": "On narrow screens the paper size and the primary PDF action always stay pinned to the bottom of the viewport.",
+        "section": "layout"
+      },
+      {
+        "name": "The Cel Not Shadow Rule",
+        "body": "If something needs to read as raised, outline it in ink or give it a flat fill. Never use a blurred shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The One Device Pixel Rule",
+        "body": "Pattern lines are one device pixel wide at every zoom and pixel ratio, redrawn on resize. Never draw pattern geometry with a CSS-pixel stroke.",
+        "section": "shapes"
+      },
+      {
+        "name": "The One Motion Rule",
+        "body": "The diagonal wipe is the only authored motion. Everything else is a 150ms colour change on hover. Don't add entrances, parallax or scroll effects.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "**Do** keep every corner square (zero radius) and border controls with 1.5px solid ink.",
+      "**Do** draw pattern lines one device pixel wide with a non-scaling stroke, and keep the on-screen line language (ink cut, ultramarine dashed guides, magenta lit seam) the same as the printed one.",
+      "**Do** use magenta for exactly one \"this one\" mark per context: the selection, the lit seam, focus, or the diagonal edge.",
+      "**Do** size display titles from their longest word so they clear the diagonal.",
+      "**Do** use tabular figures wherever values update in place.",
+      "**Do** keep paper size and Download PDF pinned to the bottom below 1024px.",
+      "**Do** turn the diagonal wipe off under `prefers-reduced-motion`."
+    ],
+    "donts": [
+      "**Don't** add a dark mode; pattern checking happens against white paper.",
+      "**Don't** use shadows, gradients or rounded corners on any surface.",
+      "**Don't** fill buttons with magenta or use it as decoration.",
+      "**Don't** let display type cross the diagonal cut.",
+      "**Don't** add a second authored animation beyond the title-card wipe.",
+      "**Don't** draw pattern geometry with CSS-pixel strokes or any radius."
+    ]
+  }
+}

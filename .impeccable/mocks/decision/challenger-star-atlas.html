@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Star Atlas sketch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya:ital@1&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{font-family:'Alegreya Sans',system-ui,sans-serif;background:#0b1430;color:#f2f0e6;font-variant-numeric:tabular-nums}
+header{height:56px;display:flex;align-items:center;gap:28px;padding:0 24px;border-bottom:1px solid #26335e;background:#0b1430}
+.brand{font-weight:700;font-size:17px;letter-spacing:.01em}
+.brand i{font-family:'Alegreya',serif;font-weight:400;color:#ff6a3d}
+nav{display:flex;gap:4px}
+nav a{color:#9aa6cc;text-decoration:none;font-size:14px;padding:7px 12px;border-radius:6px}
+nav a.on{color:#f2f0e6;background:#18244a}
+.units{margin-left:auto;display:flex;border:1px solid #33406e;border-radius:6px;overflow:hidden;font-size:13px}
+.units span{padding:6px 12px;color:#9aa6cc}.units .on{background:#5b6b99;color:#fff}
+.app{display:grid;grid-template-columns:300px 1fr 300px;height:844px}
+aside{padding:22px 22px;border-right:1px solid #26335e;background:#0d1736}
+aside.r{border-right:0;border-left:1px solid #26335e}
+h2{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#8d99c2;font-weight:500;margin-bottom:14px}
+.shape{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.shape b{font-family:'Alegreya',serif;font-style:italic;font-weight:400;font-size:30px}
+.shape small{display:block;color:#8d99c2;font-size:13px}
+label{display:block;font-size:13px;color:#c5cbe0;margin:14px 0 6px}
+.in{display:flex;align-items:center;height:38px;border:1px solid #33406e;border-radius:6px;background:#0f1a3a;padding:0 12px;font-size:15px}
+.in em{margin-left:auto;font-style:normal;color:#8d99c2;font-size:13px}
+.in.sel{justify-content:space-between}
+.tog{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:14px}
+.sw{width:34px;height:20px;border-radius:10px;background:#ff6a3d;position:relative}
+.sw:after{content:'';position:absolute;right:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#fff}
+.hint{font-size:12.5px;color:#8d99c2;margin-top:8px;line-height:1.45}
+.btn{display:block;width:100%;height:42px;border-radius:6px;border:0;font:500 15px 'Alegreya Sans';margin-top:10px}
+.pri{background:#ff6a3d;color:#1a0d06}.sec{background:transparent;color:#f2f0e6;border:1px solid #5b6b99}
+main{position:relative;background:#0f1a3a;overflow:hidden;
+ background-image:linear-gradient(#1a2752 1px,transparent 1px),linear-gradient(90deg,#1a2752 1px,transparent 1px),
+ linear-gradient(#142048 1px,transparent 1px),linear-gradient(90deg,#142048 1px,transparent 1px);
+ background-size:80px 80px,80px 80px,16px 16px,16px 16px;background-position:-1px -1px}
+.bar{position:absolute;top:0;left:0;right:0;height:44px;display:flex;align-items:center;gap:16px;padding:0 20px;border-bottom:1px solid #26335e;background:rgba(15,26,58,.92);font-size:13px;color:#9aa6cc}
+.bar b{color:#f2f0e6;font-weight:500}
+.tabs{display:flex;gap:2px;margin-left:auto}
+.tabs span{padding:5px 12px;border-radius:5px}.tabs .on{background:#18244a;color:#f2f0e6}
+.ax{position:absolute;font-size:12px;color:#9aa6cc}
+svg{position:absolute;left:0;top:44px}
+.plate{font-size:12px;fill:#9aa6cc;letter-spacing:.08em}
+.foot{position:absolute;bottom:0;left:0;right:0;height:40px;border-top:1px solid #26335e;background:rgba(15,26,58,.92);display:flex;align-items:center;gap:22px;padding:0 20px;font-size:13px;color:#9aa6cc}
+.foot b{color:#f2f0e6;font-weight:500}
+.cal{margin-left:auto;display:flex;align-items:center;gap:8px}
+.cal i{width:14px;height:14px;border:1px solid #ff6a3d}
+.idx{list-style:none}
+.idx li{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:center;padding:11px 10px;border-radius:6px;font-size:14px}
+.idx li.on{background:#18244a;outline:1px solid #ff6a3d}
+.dot{width:10px;height:10px;border-radius:50%;background:#f2f0e6;justify-self:center}
+.dot.s{width:6px;height:6px;background:#8d99c2}
+.idx small{color:#8d99c2;font-size:12.5px}
+.sep{height:1px;background:#26335e;margin:20px 0}
+.mini{width:100%;height:150px;border:1px solid #26335e;border-radius:8px;background:#0f1a3a;display:grid;place-items:center}
+.mini p{font-size:12px;color:#8d99c2;text-align:center;margin-top:6px}
+dl{display:grid;grid-template-columns:1fr auto;gap:8px 12px;font-size:13.5px}
+dt{color:#8d99c2}dd{text-align:right}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">basic&#8209;shape&#8209;patterns <i>atlas</i></div>
+  <nav><a href="#">Shapes</a><a class="on" href="#">Cylinder</a><a href="#">How printing works</a></nav>
+  <div class="units"><span class="on">cm</span><span>in</span></div>
+</header>
+<div class="app">
+  <aside>
+    <div class="shape">
+      <svg width="44" height="52" viewBox="0 0 44 52" style="position:static"><ellipse cx="22" cy="8" rx="18" ry="6" fill="none" stroke="#f2f0e6"/><path d="M4 8v36M40 8v36" stroke="#f2f0e6"/><path d="M4 44a18 6 0 0 0 36 0" fill="none" stroke="#f2f0e6"/></svg>
+      <div><b>Cylinder</b><small>Gauntlet cuff · open tube</small></div>
+    </div>
+    <h2>Measurements</h2>
+    <label>Circumference</label><div class="in">30.0<em>cm</em></div>
+    <label>Height</label><div class="in">22.0<em>cm</em></div>
+    <div class="sep"></div>
+    <h2>Material</h2>
+    <label>Material</label><div class="in sel">Fabric <em>▾</em></div>
+    <label>Seam allowance</label><div class="in">1.0<em>cm</em></div>
+    <div class="tog"><div class="sw"></div>Add seam allowance</div>
+    <p class="hint">Thickness compensation is off for fabric. Turn it on for EVA foam or cardboard.</p>
+    <div class="sep"></div>
+    <label>Paper</label><div class="in sel">A4 · portrait <em>▾</em></div>
+    <button class="btn pri">Download PDF · 2 pages</button>
+    <button class="btn sec">Export SVG for cutter</button>
+  </aside>
+  <main>
+    <div class="bar"><span>Plate view</span><b>Piece A · Cuff body</b><span>32.0 × 24.0 cm incl. seam</span>
+      <div class="tabs"><span class="on">Pattern</span><span>Pages</span><span>3D</span></div></div>
+    <span class="ax" style="top:52px;left:84px">0</span><span class="ax" style="top:52px;left:244px">10 cm</span><span class="ax" style="top:52px;left:404px">20</span><span class="ax" style="top:52px;left:564px">30</span><span class="ax" style="top:52px;left:724px">40</span>
+    <svg width="840" height="760" viewBox="0 0 840 760">
+      <!-- plates: A4 printable 19 x 27.7 cm at 16px/cm -->
+      <rect x="112" y="84" width="304" height="443" fill="rgba(91,107,153,.07)" stroke="#5b6b99" stroke-dasharray="6 5"/>
+      <rect x="416" y="84" width="304" height="443" fill="rgba(91,107,153,.07)" stroke="#5b6b99" stroke-dasharray="6 5"/>
+      <text class="plate" x="120" y="78">PLATE I · PAGE 1 OF 2</text>
+      <text class="plate" x="424" y="78">PLATE II · PAGE 2 OF 2</text>
+      <!-- matched edge marks -->
+      <g stroke="#ff6a3d" stroke-width="1.5"><path d="M410 150h12M410 300h12M410 450h12"/><path d="M416 140v20M416 290v20M416 440v20"/></g>
+      <g fill="#ff6a3d" font-size="12" font-family="Alegreya Sans"><text x="426" y="154">◆ a</text><text x="426" y="304">◆ b</text><text x="426" y="454">◆ c</text><text x="384" y="154">a ◆</text><text x="384" y="304">b ◆</text><text x="384" y="454">c ◆</text></g>
+      <!-- seam allowance outline 32 x 24 cm -->
+      <rect x="160" y="136" width="512" height="384" fill="none" stroke="#8d99c2" stroke-dasharray="3 4"/>
+      <!-- cut line 30 x 22 cm -->
+      <rect x="176" y="152" width="480" height="352" fill="rgba(242,240,230,.04)" stroke="#f2f0e6" stroke-width="1.5"/>
+      <!-- grain line -->
+      <g stroke="#f2f0e6"><path d="M416 210v236"/><path d="M410 220l6-10 6 10M410 436l6 10 6-10" fill="none"/></g>
+      <text x="426" y="330" font-size="12" fill="#f2f0e6" font-family="Alegreya Sans">grain</text>
+      <!-- notches -->
+      <g stroke="#f2f0e6"><path d="M296 152v-10M536 152v-10M296 504v10M536 504v10"/></g>
+      <text x="200" y="186" font-family="Alegreya" font-style="italic" font-size="22" fill="#f2f0e6">A · Cuff body</text>
+      <text x="200" y="208" font-size="12.5" fill="#8d99c2" font-family="Alegreya Sans">cut 1 · fabric · join short edges</text>
+      <!-- dimension annotations -->
+      <g stroke="#ff6a3d"><path d="M176 548h480M176 542v12M656 542v12"/><path d="M692 152v352M686 152h12M686 504h12"/></g>
+      <text x="380" y="570" font-size="13" fill="#ff6a3d" font-family="Alegreya Sans">30.0 cm circumference</text>
+      <text x="704" y="332" font-size="13" fill="#ff6a3d" font-family="Alegreya Sans">22.0 cm</text>
+      <!-- calibration square -->
+      <rect x="128" y="476" width="48" height="48" fill="none" stroke="#ff6a3d"/>
+      <text x="128" y="540" font-size="12" fill="#ff6a3d" font-family="Alegreya Sans">3 cm check</text>
+      <!-- star markers at corners -->
+      <g fill="#f2f0e6"><circle cx="176" cy="152" r="3.5"/><circle cx="656" cy="152" r="3.5"/><circle cx="176" cy="504" r="3.5"/><circle cx="656" cy="504" r="3.5"/></g>
+    </svg>
+    <div class="foot"><span><b>2</b> pages A4</span><span>Overlap <b>1.0 cm</b></span><span>Match marks <b>a–c</b></span>
+      <span class="cal"><i></i>Print at 100% · check the 3 cm square</span></div>
+  </main>
+  <aside class="r">
+    <h2>Index of pieces</h2>
+    <ul class="idx">
+      <li class="on"><span class="dot"></span><span>A · Cuff body<br><small>Plates I–II</small></span><small>32 × 24</small></li>
+      <li><span class="dot s"></span><span>B · Edge binding<br><small>optional · off</small></span><small>—</small></li>
+    </ul>
+    <div class="sep"></div>
+    <h2>Finished shape</h2>
+    <div class="mini"><div>
+      <svg width="120" height="110" viewBox="0 0 120 110" style="position:static"><ellipse cx="60" cy="18" rx="40" ry="12" fill="none" stroke="#f2f0e6"/><path d="M20 18v74M100 18v74" stroke="#f2f0e6"/><path d="M20 92a40 12 0 0 0 80 0" fill="none" stroke="#f2f0e6"/><path d="M60 30v74" stroke="#ff6a3d" stroke-dasharray="3 3"/></svg>
+      <p>Seam shown in ember · drag to rotate</p></div></div>
+    <div class="sep"></div>
+    <h2>Totals</h2>
+    <dl><dt>Pieces</dt><dd>1</dd><dt>Pages</dt><dd>2 × A4</dd><dt>Fabric needed</dt><dd>34 × 26 cm</dd><dt>Seam allowance</dt><dd>1.0 cm</dd></dl>
+  </aside>
+</div>
+</body>
+</html>
