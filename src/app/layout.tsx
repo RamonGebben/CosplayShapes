@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 import { Atkinson_Hyperlegible, Big_Shoulders } from 'next/font/google';
 import { colorModeScript } from '@pindakaasman/design-system';
 import { StyledComponentsRegistry } from '~/providers/StyledComponentsRegistry';
@@ -58,6 +59,7 @@ const RootLayout = ({ children }: LayoutProps<'/'>) => {
         <StyledComponentsRegistry>
           <ThemeProvider>{children}</ThemeProvider>
         </StyledComponentsRegistry>
+        <Analytics />
       </body>
     </html>
   );
