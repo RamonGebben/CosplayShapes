@@ -14,7 +14,7 @@ const MAGENTA = '#ff3d7f';
 const YELLOW = '#ffd23f';
 
 const fontData = readFile(
-  path.join(process.cwd(), 'src/app/_og/BigShoulders-Black.ttf'),
+  path.join(process.cwd(), 'public/fonts/BigShoulders-Black.ttf'),
 );
 
 /** The social card: brand, a heading, a line of detail and the shapes. */

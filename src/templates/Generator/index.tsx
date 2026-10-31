@@ -28,12 +28,23 @@ export const Generator = ({ slug }: { slug: ShapeSlug }) => {
   const onPdf = async () => {
     setStatus('working');
     try {
-      const { patternPdf } = await import('~/utils/pdfExport');
-      const bytes = await patternPdf(layout, paper, {
-        title: `${shape.name} pattern`,
-        materialLabel: label,
-        unit: state.unit,
-      });
+      const [{ patternPdf }, headingFont] = await Promise.all([
+        import('~/utils/pdfExport'),
+        // Without the display face the headings fall back to Helvetica Bold.
+        fetch('/fonts/BigShoulders-Black.ttf')
+          .then(response => (response.ok ? response.arrayBuffer() : undefined))
+          .catch(() => undefined),
+      ]);
+      const bytes = await patternPdf(
+        layout,
+        paper,
+        {
+          title: `${shape.name} pattern`,
+          materialLabel: label,
+          unit: state.unit,
+        },
+        headingFont,
+      );
       downloadBlob(
         new Blob([new Uint8Array(bytes)], { type: 'application/pdf' }),
         patternFileName(slug, 'pdf', paper.id),
