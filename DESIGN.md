@@ -226,7 +226,7 @@ Pattern drawing has its own line language, kept in step with the printed exports
 - Grid: rule grey, one hairline, at a true 1 cm or 1 in.
 - Piece labels: bold ink title over a muted detail line, with a white paint-order halo.
 
-Printed PDF and SVG exports use black cut lines, ultramarine dashed score and stitch lines, Helvetica, half-diamond marks where tiles join, and a 5 cm or 2 in calibration square on the guide page. In the PDF, headings (the title, Page map, Pieces and each tile's page name) are set in Big Shoulders caps, and piece labels carry a white halo traced around their glyphs so they stay readable where they cross a line. Labels follow the on-screen rule: across a piece that fits them, turned along a tall narrow one, and set just beside one too small for either.
+Printed PDF and SVG exports use black cut lines, ultramarine dashed score and stitch lines, Helvetica, crosshair registration marks (a ring with arms) on every tile corner shared with another page, so pages are joined by snipping the corners and overlapping rather than trimming each page, and a 5 cm or 2 in calibration square on the guide page. In the PDF, headings (the title, Page map, Pieces and each tile's page name) are set in Big Shoulders caps, and piece labels carry a white halo traced around their glyphs so they stay readable where they cross a line. Labels follow the on-screen rule: across a piece that fits them, turned along a tall narrow one, and set just beside one too small for either.
 
 **The One Device Pixel Rule.** Pattern lines are one device pixel wide at every zoom and pixel ratio, redrawn on resize. Never draw pattern geometry with a CSS-pixel stroke.
 

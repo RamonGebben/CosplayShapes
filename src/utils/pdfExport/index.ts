@@ -159,6 +159,23 @@ export const labelPosition = ({
 const frame = (x: number, y: number, width: number, height: number) =>
   `M${x} ${y} L${x + width} ${y} L${x + width} ${y + height} L${x} ${y + height} Z`;
 
+/** Registration crosshair: a ring with arms past it, in mm. */
+const CROSSHAIR = { arm: 5, ring: 2.5 };
+
+const crosshair = (page: PDFPage, x: number, y: number) => {
+  const { arm, ring } = CROSSHAIR;
+  strokePath(
+    page,
+    `M${x - arm} ${y} L${x + arm} ${y} M${x} ${y - arm} L${x} ${y + arm}`,
+    { width: 0.25 },
+  );
+  strokePath(
+    page,
+    `M${x - ring} ${y} A${ring} ${ring} 0 1 0 ${x + ring} ${y} A${ring} ${ring} 0 1 0 ${x - ring} ${y} Z`,
+    { width: 0.25 },
+  );
+};
+
 const guidePage = (
   doc: PDFDocument,
   paper: Paper,
@@ -233,7 +250,7 @@ const guidePage = (
   text(
     page,
     fonts.regular,
-    'Trim each page on its grey frame and tape pages edge to edge, matching the half-diamonds.',
+    'Snip each corner off through its crosshair, overlap pages so the crosshairs line up, then tape.',
     left,
     paper.height - PAGE_MARGIN_MM - 4,
     9,
@@ -344,55 +361,49 @@ const tilePage = (
   });
   const has = (column: number, row: number) =>
     layout.tiles.some(item => item.column === column && item.row === row);
-  const diamond = 4;
-  const marks = [
-    {
-      on: has(tile.column, tile.row - 1),
-      x: m + w / 2,
-      y: m,
-      name: tileName(tile.column, tile.row - 1),
-    },
-    {
-      on: has(tile.column, tile.row + 1),
-      x: m + w / 2,
-      y: m + h,
-      name: tileName(tile.column, tile.row + 1),
-    },
-    {
-      on: has(tile.column - 1, tile.row),
-      x: m,
-      y: m + h / 2,
-      name: tileName(tile.column - 1, tile.row),
-    },
-    {
-      on: has(tile.column + 1, tile.row),
-      x: m + w,
-      y: m + h / 2,
-      name: tileName(tile.column + 1, tile.row),
-    },
-  ];
-  marks
-    .filter(mark => mark.on)
-    .forEach(mark => {
-      strokePath(
-        page,
-        `M${mark.x - diamond} ${mark.y} L${mark.x} ${mark.y - diamond} L${mark.x + diamond} ${mark.y} L${mark.x} ${mark.y + diamond} Z`,
-        { width: 0.3 },
-      );
-    });
-  text(page, fonts.heading, `PAGE ${tile.name}`, m, m / 2, 14);
-  text(page, font, meta.title, m + w, m / 2, 9, 'right');
-  const joins = marks.filter(mark => mark.on).map(mark => mark.name);
-  if (joins.length > 0)
-    text(page, font, `Joins ${joins.join(', ')}`, m, m + h + m / 2, 9);
+  const neighbours = [
+    [tile.column, tile.row - 1],
+    [tile.column, tile.row + 1],
+    [tile.column - 1, tile.row],
+    [tile.column + 1, tile.row],
+  ]
+    .filter(([column, row]) => has(column, row))
+    .map(([column, row]) => tileName(column, row));
+  // A crosshair on every frame corner another tile shares: snip the corner
+  // off one page through its mark and lay it on the next, no full trim.
+  ([-1, 1] as const)
+    .flatMap(across => ([-1, 1] as const).map(down => [across, down] as const))
+    .filter(([across, down]) =>
+      [
+        [across, 0],
+        [0, down],
+        [across, down],
+      ].some(([c, r]) => has(tile.column + c, tile.row + r)),
+    )
+    .forEach(([across, down]) =>
+      crosshair(page, m + (across > 0 ? w : 0), m + (down > 0 ? h : 0)),
+    );
+  const inset = CROSSHAIR.arm + 2;
+  text(page, fonts.heading, `PAGE ${tile.name}`, m + inset, m / 2, 14);
+  text(page, font, meta.title, m + w - inset, m / 2, 9, 'right');
+  if (neighbours.length > 0)
+    text(
+      page,
+      font,
+      `Joins ${neighbours.join(', ')}`,
+      m + inset,
+      m + h + m / 2,
+      9,
+    );
+  const scaleEnd = m + w - inset;
   strokePath(
     page,
-    `M${m + w - 20} ${m + h + m / 2} L${m + w} ${m + h + m / 2}`,
+    `M${scaleEnd - 20} ${m + h + m / 2} L${scaleEnd} ${m + h + m / 2}`,
     {
       width: 0.4,
     },
   );
-  text(page, font, '2 cm', m + w - 22, m + h + m / 2, 8, 'right');
+  text(page, font, '2 cm', scaleEnd - 22, m + h + m / 2, 8, 'right');
 };
 
 /**
