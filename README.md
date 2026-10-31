@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# 🧵 CosplayShapes
 
-First, run the development server:
+_A modern web application that helps cosmakers, prop builders, and crafters generate, scale, and export precise 3D geometric shapes into flat printable patterns._
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-cosplay--shapes.vercel.app-brightgreen?style=for-the-badge&logo=vercel)](https://cosplayshapes.ra-ge.net/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](https://github.com/RamonGebben/CosplayShapes/pulls)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+</div>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🌐 Live Demo
 
-## Learn More
+Try the live tool directly in your browser:
 
-To learn more about Next.js, take a look at the following resources:
+👉 [**cosplayshapes.ra-ge.net**](https://cosplayshapes.ra-ge.net/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ✨ Key Features & Functionality
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- 📐 **Parametric Shape Generation:** Customize geometric shapes (pyramids, cones, domes, armor segments) with precise real-time dimensional inputs.
+- ✂️ **Instant 2D Pattern Unfolding:** Automatically convert 3D geometric shapes into flat 2D templates suitable for EVA foam, Worbla, leather, or paper crafting.
+- 🖨️ **Print-Ready Exports:** Export vector/PDF patterns formatted for A4 and US Letter printing, complete with seam allowances and registration marks.
+- 🎯 **Custom Scaling:** Adjust dimensions to perfectly match your body proportions and armor measurements without ruining pattern ratios.
+- 💻 **Browser-Based & Lightweight:** No installation required—built for fast, responsive performance on desktop and mobile browsers.
 
-## Deploy on Vercel
+## 📖 Product Vision
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+For an in-depth look at the product strategy, design principles, target user personas, and core concepts, please check out the [**PRODUCT.md**](./PRODUCT.md) document.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🚀 Local Development & Setup
+
+To run the project locally on your machine:
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/RamonGebben/CosplayShapes.git
+   cd CosplayShapes
+   ```
+
+2. **Install dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server:**
+
+   ```bash
+   npm run dev
+   ```
+
+4. Open `http://localhost:3000` (or the URL output by your dev server) in your browser.
+
+## 🤝 Contributing
+
+Contributions, bug reports, and pattern ideas are greatly appreciated!
+
+1. Fork the repository.
+2. Create your feature branch (`git checkout -b feature/NewShapeGenerator`).
+3. Commit your changes (`git commit -m 'Add new dome shape generator'`).
+4. Push to the branch (`git push origin feature/NewShapeGenerator`).
+5. Open a Pull Request.
+
+## 📜 License
+
+Distributed under the **MIT License**. See `LICENSE` for details.
