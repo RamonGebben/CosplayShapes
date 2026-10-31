@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getMaterial } from '~/utils/materials';
 import { bounds, buildPattern, type BuildInput, type Polyline } from '.';
-import { offsetPolygon, rect } from './geometry';
+import { notchAlong, offsetPolygon, rect } from './geometry';
 
 const input = (
   dims: Record<string, number>,
@@ -168,5 +168,23 @@ describe('offsetPolygon', () => {
   it('grows a square evenly on every side', () => {
     const grown = bounds(offsetPolygon(rect(10, 10), 2));
     expect(grown).toEqual({ minX: -2, minY: -2, width: 14, height: 14 });
+  });
+});
+
+describe('notchAlong', () => {
+  // A square's left and bottom edges: halfway lands on the corner sample.
+  const square: Polyline = [
+    [0, 0],
+    [0, 10],
+    [10, 10],
+    [10, 0],
+  ];
+  const curve = square.slice(0, 3);
+
+  it('angles a notch on a sample point the same, an ulp either side', () => {
+    const under = notchAlong(curve, 0.5 - 1e-15, square);
+    const over = notchAlong(curve, 0.5 + 1e-15, square);
+    expect(under[1][0]).toBeCloseTo(over[1][0], 9);
+    expect(under[1][1]).toBeCloseTo(over[1][1], 9);
   });
 });

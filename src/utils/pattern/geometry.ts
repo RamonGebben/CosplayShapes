@@ -143,8 +143,14 @@ export const notchAlong = (
           : found,
     { index: -1, before: 0 },
   );
-  const segment = Math.max(0, index === -1 ? lengths.length - 1 : index);
-  const local = (target - before) / (lengths[segment] || 1);
+  const found = Math.max(0, index === -1 ? lengths.length - 1 : index);
+  const raw = (target - before) / (lengths[found] || 1);
+  // A target on a sample point always takes the segment after it: which
+  // side the sum lands on differs by an ulp between JS engines, and the
+  // notch's angle follows the segment, so SSR and hydration would disagree.
+  const onVertex = 1 - raw < 1e-9 && found < lengths.length - 1;
+  const segment = onVertex ? found + 1 : found;
+  const local = onVertex ? 0 : raw;
   return notch(
     curve[segment],
     curve[segment + 1],

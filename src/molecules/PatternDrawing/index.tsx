@@ -82,7 +82,9 @@ export const PatternDrawing = ({
       <Svg
         role="img"
         aria-label={title}
-        viewBox={`${view.x} ${view.y} ${view.width} ${view.height}`}
+        viewBox={[view.x, view.y, view.width, view.height]
+          .map(value => Math.round(value * 1000) / 1000)
+          .join(' ')}
         preserveAspectRatio="xMidYMid meet"
       >
         {showDetail && (
