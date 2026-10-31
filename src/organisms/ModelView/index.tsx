@@ -5,7 +5,7 @@ import { useTheme } from 'styled-components';
 import type { ModelSpec } from '~/utils/pattern';
 import { Viewport } from './components/Viewport';
 import { useModelScene } from './hooks/useModelScene';
-import { rotateByDrag, rotateByKey } from './hooks/useModelScene/rotation';
+import { rotateByDrag, rotateByKey } from '~/utils/modelScene';
 
 export interface ModelViewProps {
   model: ModelSpec;

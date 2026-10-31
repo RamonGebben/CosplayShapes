@@ -352,7 +352,7 @@
       "name": "Shape Tile",
       "kind": "card",
       "refersTo": "shape-tile",
-      "description": "Picker tile: the flat pattern thumbnail, the shape name in title caps, an example line.",
+      "description": "Picker tile: a mini title card (cel-shaded model still on the diagonal ultramarine field, flat pattern thumbnail beside it), the shape name in title caps, an example line.",
       "html": "<a class=\"ds-tile\" href=\"#\"><svg viewBox=\"0 0 120 70\" width=\"100%\" height=\"70\"><path d=\"M10 60 L60 8 L110 60 Z\" fill=\"#ffffff\" stroke=\"#121212\" stroke-width=\"1\"/><path d=\"M18 56 L60 14 L102 56 Z\" fill=\"none\" stroke=\"#1d2bd6\" stroke-width=\"1\" stroke-dasharray=\"5 4\"/></svg><span class=\"ds-tile-name\">Cone</span><span class=\"ds-tile-example\">Horns, hats, spikes</span></a>",
       "css": ".ds-tile{display:grid;gap:4px;width:240px;padding:14px 16px 16px;border:1.5px solid #121212;border-radius:0;background:#ffffff;color:#121212;text-decoration:none;font-family:'Atkinson Hyperlegible', system-ui, sans-serif;transition:background-color .15s ease-out}.ds-tile:hover{background:#ffd23f}.ds-tile:focus-visible{outline:3px solid #ff3d7f;outline-offset:2px}.ds-tile-name{font-family:'Big Shoulders', Impact, sans-serif;font-size:24px;font-weight:900;line-height:1;text-transform:uppercase}.ds-tile-example{font-size:13px;color:#4a4a52}"
     },

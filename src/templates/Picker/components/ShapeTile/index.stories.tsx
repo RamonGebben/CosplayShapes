@@ -9,6 +9,7 @@ const meta = {
   args: {
     shape: getShape('dome'),
     layout: layoutPattern(buildExample('dome').pieces, PAPERS.a4),
+    model: buildExample('dome').model,
   },
 } satisfies Meta<typeof ShapeTile>;
 

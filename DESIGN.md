@@ -263,7 +263,7 @@ Heavy, square and inky.
 
 ### Shape Tiles
 
-- **Style:** white tile, 1.5px ink border, square, with the flat pattern drawn as a thumbnail, the shape name in title caps and a small muted example line.
+- **Style:** white tile, 1.5px ink border, square. Its top is a small title card: the cel-shaded model still on an ultramarine field cut by the diagonal with its magenta edge, and the flat pattern as a thumbnail beside it. Below, the shape name in title caps and a small muted example line. All stills share one offscreen WebGL context; without WebGL the field shows the shape's line icon.
 - **Hover:** fills yellow.
 
 ### Title-Card Stage (signature)

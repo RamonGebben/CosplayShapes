@@ -1,5 +1,6 @@
 import { DisplayTitle } from '~/atoms/DisplayTitle';
 import type { Layout } from '~/utils/layout';
+import type { ModelSpec } from '~/utils/pattern';
 import { FAMILIES, SHAPES, type ShapeSlug } from '~/utils/shapes';
 import { Facts } from './components/Facts';
 import { Field } from './components/Field';
@@ -13,6 +14,7 @@ import { TileGrid } from './components/TileGrid';
 export interface ShapePreview {
   slug: ShapeSlug;
   layout: Layout;
+  model: ModelSpec;
 }
 
 /** The shape picker: every shape with the flat pattern it becomes. */
@@ -48,7 +50,11 @@ export const Picker = ({ previews }: { previews: Array<ShapePreview> }) => (
               return (
                 preview && (
                   <li key={shape.slug}>
-                    <ShapeTile shape={shape} layout={preview.layout} />
+                    <ShapeTile
+                      shape={shape}
+                      layout={preview.layout}
+                      model={preview.model}
+                    />
                   </li>
                 )
               );

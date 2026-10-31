@@ -7,10 +7,14 @@ import { Picker } from '.';
 const meta = {
   component: Picker,
   args: {
-    previews: SHAPES.map(shape => ({
-      slug: shape.slug,
-      layout: layoutPattern(buildExample(shape.slug).pieces, PAPERS.a4),
-    })),
+    previews: SHAPES.map(shape => {
+      const example = buildExample(shape.slug);
+      return {
+        slug: shape.slug,
+        layout: layoutPattern(example.pieces, PAPERS.a4),
+        model: example.model,
+      };
+    }),
   },
   parameters: { layout: 'fullscreen' },
 } satisfies Meta<typeof Picker>;

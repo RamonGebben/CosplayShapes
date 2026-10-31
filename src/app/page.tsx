@@ -6,10 +6,14 @@ import { webApplicationSchema } from '~/utils/seo';
 import { SHAPES } from '~/utils/shapes';
 
 const HomePage = () => {
-  const previews = SHAPES.map(shape => ({
-    slug: shape.slug,
-    layout: layoutPattern(buildExample(shape.slug).pieces, PAPERS.a4),
-  }));
+  const previews = SHAPES.map(shape => {
+    const example = buildExample(shape.slug);
+    return {
+      slug: shape.slug,
+      layout: layoutPattern(example.pieces, PAPERS.a4),
+      model: example.model,
+    };
+  });
   return (
     <>
       <StructuredData data={webApplicationSchema()} />
