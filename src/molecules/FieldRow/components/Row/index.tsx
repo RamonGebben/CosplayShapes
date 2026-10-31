@@ -11,4 +11,9 @@ export const Row = styled.div<{ $wide: boolean }>`
   padding: 9px 0;
   border-bottom: 1px solid
     ${({ theme }) => theme.color('formBackground', 'emphasis')};
+
+  /* Toggles have no rule of their own, so give the one above some air. */
+  & + label {
+    margin-top: 9px;
+  }
 `;
