@@ -48,3 +48,16 @@ storybook-static
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# claude code: machine-local settings
+.claude/settings.local.json
+
+# vendored skills download their platform binary on first run
+.claude/skills/*/scripts/bin/
+.opencode/skills/*/scripts/bin/
+
+# impeccable: machine-local and generated working files
+.impeccable/config.local.json
+.impeccable/hook.cache.json
+.impeccable/review/
+.impeccable/questions/*.log

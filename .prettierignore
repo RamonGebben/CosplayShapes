@@ -1,1 +1,6 @@
 pnpm-lock.yaml
+
+# Vendored skills and generated design working files
+.claude
+.opencode
+.impeccable
