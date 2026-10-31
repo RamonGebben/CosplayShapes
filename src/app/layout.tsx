@@ -16,6 +16,9 @@ const bigShoulders = Big_Shoulders({
   variable: '--font-big-shoulders',
   weight: ['800', '900'],
   subsets: ['latin'],
+  // next/font has no metrics for Big Shoulders to size a fallback from.
+  adjustFontFallback: false,
+  fallback: ['Impact', 'sans-serif'],
 });
 
 export const metadata: Metadata = {
