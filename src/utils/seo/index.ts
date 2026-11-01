@@ -44,6 +44,15 @@ const SHAPE_SEO: Record<ShapeSlug, ShapeSeo> = {
     uses: 'bent pipes, hoses and elbow joints',
     keywords: ['elbow pattern', 'pipe bend template', 'lobster back elbow'],
   },
+  'curved-horn': {
+    uses: 'demon horns, ram horns and tusks',
+    keywords: [
+      'curved horn template',
+      'horn pattern',
+      'eva foam horn pattern',
+      'demon horn template',
+    ],
+  },
   cone: {
     uses: 'horns, spikes and hat tips',
     keywords: ['cone template', 'cone pattern generator', 'horn pattern'],

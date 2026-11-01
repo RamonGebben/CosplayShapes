@@ -2,6 +2,7 @@ export type ShapeSlug =
   | 'cylinder'
   | 'angled-cylinder'
   | 'elbow'
+  | 'curved-horn'
   | 'cone'
   | 'truncated-cone'
   | 'dome'
@@ -201,6 +202,62 @@ export const SHAPES: Array<Shape> = [
         max: 12,
         edge: 'joint',
         hint: 'More sections make a smoother bend with more joints.',
+      },
+    ],
+    options: [],
+  },
+  {
+    slug: 'curved-horn',
+    name: 'Curved horn',
+    family: 'round',
+    example: 'Demon horn',
+    fields: [
+      {
+        kind: 'length',
+        key: 'base',
+        label: 'Base circumference',
+        diameterLabel: 'Base diameter',
+        example: 200,
+        edge: 'base',
+      },
+      {
+        kind: 'length',
+        key: 'tip',
+        label: 'Tip circumference',
+        diameterLabel: 'Tip diameter',
+        example: 20,
+        edge: 'tip',
+        hint: 'A few millimetres makes a sharp point that can still be cut.',
+      },
+      {
+        kind: 'length',
+        key: 'length',
+        label: 'Length',
+        example: 300,
+        edge: 'length',
+        hint: 'Along the middle of the curl, from base to tip.',
+      },
+      {
+        kind: 'count',
+        key: 'bend',
+        label: 'Curl',
+        example: 90,
+        min: 10,
+        max: 270,
+        edge: 'bend',
+        hint: 'How far the horn turns from base to tip: 90 curls it a quarter turn.',
+        unit: '°',
+        unitName: 'degrees',
+      },
+      {
+        kind: 'count',
+        key: 'sections',
+        label: 'Sections',
+        example: 6,
+        min: 2,
+        max: 16,
+        edge: 'joint',
+        hint: 'More sections make a smoother curl with more joints.',
       },
     ],
     options: [],

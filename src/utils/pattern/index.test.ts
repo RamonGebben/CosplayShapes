@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { getMaterial } from '~/utils/materials';
 import { bounds, buildPattern, type BuildInput, type Polyline } from '.';
 import { notchAlong, offsetPolygon, rect } from './geometry';
+import { hornPoint, hornSections } from './tube';
 
 const input = (
   dims: Record<string, number>,
@@ -147,6 +148,51 @@ describe('buildPattern', () => {
     );
     expect(result).toMatchObject({ ok: false, field: 'sections' });
     if (!result.ok) expect(result.message).toContain('at least 3 sections');
+  });
+
+  it('gives neighbouring curved horn sections joint edges of one length', () => {
+    const dims = { base: 200, tip: 20, length: 300, bend: 120, sections: 6 };
+    [0, 6].forEach(thicknessMm => {
+      const pattern = build('curved-horn', input(dims, { thicknessMm }));
+      expect(pattern.pieces).toHaveLength(6);
+      const curves = (key: string) =>
+        pattern.pieces.map(piece =>
+          piece.edges
+            .filter(edge => edge.keys.includes(key))
+            .map(edge => pathLength(edge.points)),
+        );
+      const joints = curves('joint');
+      joints.slice(0, -1).forEach((joint, index) => {
+        const narrowEnd = joint[joint.length - 1];
+        const nextWideEnd = joints[index + 1][0];
+        expect(narrowEnd).toBeCloseTo(nextWideEnd, 6);
+      });
+    });
+  });
+
+  it('opens a curved horn to the base and narrows it to the tip', () => {
+    const pattern = build(
+      'curved-horn',
+      input({ base: 200, tip: 20, length: 300, bend: 90, sections: 6 }),
+    );
+    expect(edgeLength(pattern, 'base', 0)).toBeCloseTo(200, 2);
+    expect(edgeLength(pattern, 'tip', 5)).toBeCloseTo(20, 2);
+  });
+
+  it('refuses a curved horn that curls tighter than it is wide', () => {
+    const result = buildPattern(
+      'curved-horn',
+      input({ base: 400, tip: 20, length: 120, bend: 270, sections: 8 }),
+    );
+    expect(result).toMatchObject({ ok: false, field: 'bend' });
+  });
+
+  it('refuses a curved horn whose tip is not narrower than its base', () => {
+    const result = buildPattern(
+      'curved-horn',
+      input({ base: 100, tip: 100, length: 300, bend: 90, sections: 6 }),
+    );
+    expect(result).toMatchObject({ ok: false, field: 'tip' });
   });
 
   it('gives a cone wall an arc as long as the base circumference', () => {
@@ -386,6 +432,42 @@ describe('buildPattern', () => {
     expect(width).toBeCloseTo(220, 6);
     expect(height).toBeCloseTo(70, 6);
     expect(pattern.pieces[0].stitch).toBe(true);
+  });
+});
+
+describe('hornSections', () => {
+  // A cone's surface makes the same angle with its axis everywhere.
+  const offCone = (
+    point: readonly [number, number, number],
+    section: ReturnType<typeof hornSections>[number],
+    slope: number,
+  ) => {
+    const toApex = section.apex.map((value, axis) => value - point[axis]);
+    const along = toApex.reduce(
+      (sum, value, axis) => sum + value * section.axis[axis],
+      0,
+    );
+    return along / Math.hypot(...toApex) - Math.cos(Math.atan(slope));
+  };
+
+  it('puts every joint on both neighbouring cones', () => {
+    const slope = 0.1;
+    const turn = (25 * Math.PI) / 180;
+    const sections = hornSections(
+      along => 40 - slope * along,
+      slope,
+      150,
+      5,
+      turn,
+    );
+    sections.slice(0, -1).forEach((section, index) => {
+      const next = sections[index + 1];
+      [0, 1, 2, 3, 4, 5].forEach(step => {
+        const angle = (step * Math.PI) / 3;
+        const point = hornPoint(section, slope, angle, section.end);
+        expect(offCone(point, next, slope)).toBeCloseTo(0, 9);
+      });
+    });
   });
 });
 

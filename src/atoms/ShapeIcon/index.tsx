@@ -6,6 +6,7 @@ const PATHS: Record<ShapeSlug, string> = {
   'angled-cylinder':
     'M4 8.5c0-1.6 3.1-4.5 7-5.5s7 .4 7 2v11c0 1.4-3.1 2.5-7 2.5s-7-1.1-7-2.5v-7.5Z',
   elbow: 'M3 20V12a9 9 0 0 1 9-9h8M9 20v-8a3 3 0 0 1 3-3h8M3 20h6M20 3v6',
+  'curved-horn': 'M3 20c0-9 5-15 16-17-6 3-9 9-9 17H3Z',
   cone: 'M11 2 4 16.5c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5L11 2Z',
   'truncated-cone':
     'M6 5a5 2 0 1 0 10 0a5 2 0 1 0 -10 0M6 5 4 16.5c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5L16 5',

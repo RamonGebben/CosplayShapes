@@ -379,3 +379,267 @@ export const elbow = (input: BuildInput): BuildResult => {
     },
   };
 };
+
+const dot = (a: Vertex, b: Vertex) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+const plus = (a: Vertex, b: Vertex): Vertex => [
+  a[0] + b[0],
+  a[1] + b[1],
+  a[2] + b[2],
+];
+const times = (a: Vertex, factor: number): Vertex => [
+  a[0] * factor,
+  a[1] * factor,
+  a[2] * factor,
+];
+
+/** A cut across a horn section: the plane through `point` facing `normal`. */
+interface Cut {
+  point: Vertex;
+  normal: Vertex;
+}
+
+interface HornSection {
+  apex: Vertex;
+  axis: Vertex;
+  out: Vertex;
+  start: Cut;
+  end: Cut;
+}
+
+/**
+ * The sections of a curved horn: cones sharing one taper, laid along the
+ * tangent polygon of the curl as an elbow's cylinders are.
+ *
+ * Neighbouring cones have the same radius where their axes cross, so they
+ * touch the same sphere there, and two cones on one sphere meet in a plane.
+ * By symmetry it faces the same way as the mitre between them, moved towards
+ * the tip by r·sinψ·cosψ / cos(half the turn): every joint matches exactly.
+ */
+export const hornSections = (
+  radiusAt: (along: number) => number,
+  slope: number,
+  bendRadius: number,
+  sections: number,
+  turn: number,
+): Array<HornSection> => {
+  const half = turn / 2;
+  const step = 2 * bendRadius * Math.tan(half);
+  const direction = (index: number): Vertex => [
+    Math.sin(index * turn),
+    Math.cos(index * turn),
+    0,
+  ];
+  const outward = (index: number): Vertex => [
+    -Math.cos(index * turn),
+    Math.sin(index * turn),
+    0,
+  ];
+  // Distance along the polygon to each station: start, joints, end.
+  const along = [
+    0,
+    ...range(sections - 1).map(index => step / 2 + index * step),
+    step * (sections - 1),
+  ];
+  const joint = (index: number): Vertex => {
+    const angle = (index - 0.5) * turn;
+    const reach = bendRadius / Math.cos(half);
+    return [bendRadius - Math.cos(angle) * reach, Math.sin(angle) * reach, 0];
+  };
+  const stations = [
+    [0, 0, 0] as Vertex,
+    ...range(sections - 1).map(index => joint(index + 1)),
+    [
+      bendRadius - Math.cos(turn * (sections - 1)) * bendRadius,
+      Math.sin(turn * (sections - 1)) * bendRadius,
+      0,
+    ] as Vertex,
+  ];
+  const sinCos = Math.sin(Math.atan(slope)) * Math.cos(Math.atan(slope));
+  const cutAt = (station: number): Cut => {
+    if (station === 0) return { point: stations[0], normal: direction(0) };
+    if (station === sections)
+      return { point: stations[sections], normal: direction(sections - 1) };
+    const mitre = plus(direction(station - 1), direction(station));
+    const normal = times(mitre, 1 / Math.hypot(...mitre));
+    const shift = (radiusAt(along[station]) * sinCos) / Math.cos(half);
+    return { point: plus(stations[station], times(normal, shift)), normal };
+  };
+  return range(sections).map(index => {
+    const axis = direction(index);
+    const toApex = radiusAt(along[index]) / slope;
+    return {
+      apex: plus(stations[index], times(axis, toApex)),
+      axis,
+      out: outward(index),
+      start: cutAt(index),
+      end: cutAt(index + 1),
+    };
+  });
+};
+
+/**
+ * Where the cone's line at this angle round (0 on the outside of the curl)
+ * crosses a cut, as a distance back from the apex. Not finite when the line
+ * runs parallel to or away from the cut.
+ */
+const reachTo = (
+  section: HornSection,
+  slope: number,
+  angle: number,
+  cut: Cut,
+) => {
+  const psi = Math.atan(slope);
+  const line = plus(
+    times(section.axis, -Math.cos(psi)),
+    plus(
+      times(section.out, Math.sin(psi) * Math.cos(angle)),
+      times([0, 0, 1], Math.sin(psi) * Math.sin(angle)),
+    ),
+  );
+  const facing = dot(cut.normal, line);
+  const reach =
+    dot(cut.normal, plus(cut.point, times(section.apex, -1))) / facing;
+  return { reach, line };
+};
+
+export const hornPoint = (
+  section: HornSection,
+  slope: number,
+  angle: number,
+  cut: Cut,
+): Vertex => {
+  const { reach, line } = reachTo(section, slope, angle, cut);
+  return plus(section.apex, times(line, reach));
+};
+
+export const curvedHorn = (input: BuildInput): BuildResult => {
+  const { base, tip, length, bend, sections } = input.dims;
+  if (base - tip < MIN_TAPER_MM)
+    return {
+      ok: false,
+      field: 'tip',
+      message:
+        'The tip has to be narrower than the base. For a tube the same size all along use the Elbow.',
+    };
+  const joints = sections - 1;
+  if (bend / joints > MAX_JOINT_DEGREES)
+    return {
+      ok: false,
+      field: 'sections',
+      message: `Use at least ${Math.ceil(bend / MAX_JOINT_DEGREES) + 1} sections: each joint can turn at most ${MAX_JOINT_DEGREES}°.`,
+    };
+  const turn = (bend * Math.PI) / 180 / joints;
+  const bendRadius = length / (2 * joints * Math.tan(turn / 2));
+  const [baseRadius, tipRadius] = [radiusOf(base), radiusOf(tip)];
+  const slope = (baseRadius - tipRadius) / length;
+  // A cone wall moved half the thickness along its normal grows its radius
+  // by that over cos ψ, and keeps its taper.
+  const grow = input.thicknessMm / 2 / Math.cos(Math.atan(slope));
+  const insideAt = (along: number) => baseRadius - slope * along;
+  const midAt = (along: number) => insideAt(along) + grow;
+  const flat = hornSections(midAt, slope, bendRadius, sections, turn);
+  const fan = Math.sin(Math.atan(slope));
+  const count = wrapSamples(TAU * (baseRadius + grow));
+  const angles = steps(0, 1, count).map(t => Math.PI + TAU * t);
+  const unrolled = flat.map(section => {
+    const curve = (cut: Cut) =>
+      angles.map(angle => {
+        const { reach } = reachTo(section, slope, angle, cut);
+        const spread = fan * (angle - TAU);
+        return {
+          reach,
+          point: [reach * Math.sin(spread), -reach * Math.cos(spread)] as Point,
+        };
+      });
+    return { wide: curve(section.start), narrow: curve(section.end) };
+  });
+  const folds = unrolled.some(({ wide, narrow }) =>
+    wide.some(
+      ({ reach }, index) =>
+        !Number.isFinite(reach) ||
+        !Number.isFinite(narrow[index].reach) ||
+        reach - narrow[index].reach < MIN_TAPER_MM,
+    ),
+  );
+  if (folds)
+    return {
+      ok: false,
+      field: 'bend',
+      message:
+        'The curl is too tight for how wide the horn is, so the inside would fold. Bend it less or make it longer.',
+    };
+  const name = (index: number) =>
+    index === 0
+      ? 'Base section'
+      : index === sections - 1
+        ? 'Tip section'
+        : `Section ${index + 1}`;
+  const pieces = unrolled.map(({ wide, narrow }, index) => {
+    const top = wide.map(({ point }) => point);
+    const bottom = narrow.map(({ point }) => point).reverse();
+    const outline = [...top, ...bottom];
+    return makePiece({
+      id: letter(index),
+      name: name(index),
+      cut: 1,
+      outline,
+      edges: [
+        { keys: index === 0 ? ['base'] : ['joint'], points: top },
+        {
+          keys: index === sections - 1 ? ['tip'] : ['joint'],
+          points: bottom,
+        },
+        { keys: ['seam'], points: [top[top.length - 1], bottom[0]] },
+        { keys: ['seam'], points: [bottom[bottom.length - 1], top[0]] },
+      ],
+      notches: [
+        ...quarterNotches(top, outline),
+        ...quarterNotches(bottom, outline),
+      ],
+      tabs: isTabbed(input) ? [top.length - 1] : [],
+      seamMm: input.seamMm,
+    });
+  });
+  const model = hornSections(insideAt, slope, bendRadius, sections, turn);
+  const ringAround = (section: HornSection, cut: Cut) =>
+    range(AROUND).map(index =>
+      hornPoint(section, slope, (TAU * index) / AROUND, cut),
+    );
+  const vertices = [
+    ...ringAround(model[0], model[0].start),
+    ...model.flatMap(section => ringAround(section, section.end)),
+  ];
+  const rings = sections + 1;
+  const sideLength = (at: number) =>
+    unrolled.reduce(
+      (sum, { wide, narrow }) => sum + wide[at].reach - narrow[at].reach,
+      0,
+    );
+  return {
+    ok: true,
+    pattern: {
+      pieces,
+      facts: [
+        { label: 'Each joint turns', degrees: bend / joints },
+        { label: 'Length on the outside', lengths: [sideLength(count / 2)] },
+        { label: 'Length on the inside', lengths: [sideLength(0)] },
+      ],
+      notes: [
+        'Join the sections in letter order from the base. Line up the seams along the inside of the curl and the middle notches along the outside.',
+      ],
+      model: {
+        kind: 'solid',
+        vertices,
+        faces: tubeFaces(rings),
+        lines: [
+          ringLine(vertices, 0, ['base']),
+          ringLine(vertices, rings - 1, ['tip']),
+          ...range(joints).map(index =>
+            ringLine(vertices, index + 1, ['joint']),
+          ),
+          tubeLine(vertices, rings, AROUND / 2, ['seam', 'length', 'bend']),
+        ],
+      },
+    },
+  };
+};
