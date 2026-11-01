@@ -17,7 +17,7 @@ A cosplayer or prop maker at a desktop, with measurements already taken, picks a
 
 ## Content
 
-- Picker: thumbnails grouped as Round (cylinder, cone, truncated cone, dome, sphere) and Flat-sided (box, pyramid, prism).
+- Picker: thumbnails in two tiers, Basic shapes (tubes and cones; domes and spheres; boxes and prisms) and Complex shapes (angled and bent tubes; shaped domes and capsules; faceted), each category collapsible.
 - Generator: shape rail; settings form (unit switch cm/in, the shape's dimensions, material from EVA foam, fabric, thermoplastic, paper/cardstock or cardboard, thickness, a thickness-compensation toggle, a seam-allowance toggle and amount); a title-card stage with a rotatable 3D model and the flat pattern; an export bar (Download PDF primary, paper A4/Letter, SVG for cutter, page count).
 
 ## States
@@ -56,7 +56,7 @@ OWN-WORLD:
 STORY: The maker sees immediately that the 3D shape they meant has become this flat piece. They trust the numbers because the pattern redraws precisely as they type, then download and print.
 
 FIRST VIEWPORT:
-- Left: the ultramarine shape rail, grouped Round and Flat-sided, with the active shape marked in magenta.
+- Left: the ultramarine shape rail, in Basic and Complex tiers of collapsible categories, with the active shape marked in magenta.
 - Next: the settings form column with unit switch, dimensions, material, thickness and toggles.
 - Right, dominant: the stage. Its title band shows the shape name in condensed heavy caps; below it, a diagonal split with the cel-shaded 3D model on one field and the flat pattern at true proportion on the other, with the edited seam lit in magenta on both.
 - Bottom right: the export bar, with Download PDF as the primary action, the paper size, SVG for cutter and the page count.

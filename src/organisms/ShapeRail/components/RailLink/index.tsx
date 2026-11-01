@@ -19,7 +19,7 @@ export const RailLink = styled(Link)`
 
   @media (hover: hover) and (pointer: fine) {
     &:not([aria-current='page']):hover {
-      background: ${({ theme }) => theme.color('quaternary', 'text')};
+      background: ${({ theme }) => theme.color('primary', 'text')};
       color: ${({ theme }) => theme.color('primary')};
     }
   }
@@ -28,4 +28,8 @@ export const RailLink = styled(Link)`
     outline-color: ${({ theme }) => theme.color('tertiary')};
     outline-offset: -3px;
   }
+
+  ${({ theme }) => theme.mq.lessThan('tabletLandscape')`
+    padding-block: 11px;
+  `}
 `;

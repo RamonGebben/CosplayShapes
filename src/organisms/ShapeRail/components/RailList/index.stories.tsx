@@ -3,7 +3,7 @@ import { RailList } from '.';
 
 const meta = {
   component: RailList,
-  args: { children: <li>Cone</li> },
+  args: { children: <li>Cone</li>, $open: true },
 } satisfies Meta<typeof RailList>;
 
 export default meta;

@@ -1,7 +1,8 @@
 import { DisplayTitle } from '~/atoms/DisplayTitle';
 import type { Layout } from '~/utils/layout';
 import type { ModelSpec } from '~/utils/pattern';
-import { FAMILIES, SHAPES, type ShapeSlug } from '~/utils/shapes';
+import { TIERS, type ShapeSlug } from '~/utils/shapes';
+import { Category } from './components/Category';
 import { Facts } from './components/Facts';
 import { Field } from './components/Field';
 import { Frame } from './components/Frame';
@@ -9,6 +10,8 @@ import { Groups } from './components/Groups';
 import { Intro } from './components/Intro';
 import { Lead } from './components/Lead';
 import { ShapeTile } from './components/ShapeTile';
+import { TierHeader } from './components/TierHeader';
+import { TierSummary } from './components/TierSummary';
 import { TileGrid } from './components/TileGrid';
 
 export interface ShapePreview {
@@ -39,27 +42,40 @@ export const Picker = ({ previews }: { previews: Array<ShapePreview> }) => (
       </Facts>
     </Intro>
     <Groups aria-label="Shapes">
-      {FAMILIES.map(family => (
-        <section key={family.id} aria-labelledby={`family-${family.id}`}>
-          <DisplayTitle as="h2" id={`family-${family.id}`} $size="l">
-            {family.name}
-          </DisplayTitle>
-          <TileGrid>
-            {SHAPES.filter(shape => shape.family === family.id).map(shape => {
-              const preview = previews.find(item => item.slug === shape.slug);
-              return (
-                preview && (
-                  <li key={shape.slug}>
-                    <ShapeTile
-                      shape={shape}
-                      layout={preview.layout}
-                      model={preview.model}
-                    />
-                  </li>
-                )
-              );
-            })}
-          </TileGrid>
+      {TIERS.map(tier => (
+        <section key={tier.id} aria-labelledby={`tier-${tier.id}`}>
+          <TierHeader>
+            <DisplayTitle as="h2" id={`tier-${tier.id}`} $size="l">
+              {tier.name}
+            </DisplayTitle>
+            <TierSummary>{tier.summary}</TierSummary>
+          </TierHeader>
+          {tier.categories.map(category => (
+            <Category
+              key={category.id}
+              category={category}
+              defaultOpen={tier.id === 'basic'}
+            >
+              <TileGrid>
+                {category.shapes.map(shape => {
+                  const preview = previews.find(
+                    item => item.slug === shape.slug,
+                  );
+                  return (
+                    preview && (
+                      <li key={shape.slug}>
+                        <ShapeTile
+                          shape={shape}
+                          layout={preview.layout}
+                          model={preview.model}
+                        />
+                      </li>
+                    )
+                  );
+                })}
+              </TileGrid>
+            </Category>
+          ))}
         </section>
       ))}
     </Groups>

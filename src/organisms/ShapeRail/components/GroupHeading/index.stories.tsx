@@ -3,7 +3,7 @@ import { GroupHeading } from '.';
 
 const meta = {
   component: GroupHeading,
-  args: { children: 'Round' },
+  args: { children: 'Basic shapes' },
 } satisfies Meta<typeof GroupHeading>;
 
 export default meta;

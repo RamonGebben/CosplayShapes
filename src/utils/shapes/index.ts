@@ -15,7 +15,10 @@ export type ShapeSlug =
   | 'prism'
   | 'tapered-prism';
 
-export type ShapeFamily = 'round' | 'flat';
+export type ShapeTier = 'basic' | 'complex';
+
+export type ShapeCategory =
+  'tubes' | 'domes' | 'boxes' | 'bent-tubes' | 'shaped-domes' | 'faceted';
 
 export interface LengthField {
   kind: 'length';
@@ -61,7 +64,7 @@ export interface ShapeOption {
 export interface Shape {
   slug: ShapeSlug;
   name: string;
-  family: ShapeFamily;
+  category: ShapeCategory;
   /** What the example measurements make, so they read as an example. */
   example: string;
   fields: Array<ShapeField>;
@@ -101,7 +104,7 @@ export const SHAPES: Array<Shape> = [
   {
     slug: 'cylinder',
     name: 'Cylinder',
-    family: 'round',
+    category: 'tubes',
     example: 'Arm band',
     fields: [
       {
@@ -125,7 +128,7 @@ export const SHAPES: Array<Shape> = [
   {
     slug: 'angled-cylinder',
     name: 'Angled cylinder',
-    family: 'round',
+    category: 'bent-tubes',
     example: 'Boot top',
     fields: [
       {
@@ -162,7 +165,7 @@ export const SHAPES: Array<Shape> = [
   {
     slug: 'elbow',
     name: 'Elbow',
-    family: 'round',
+    category: 'bent-tubes',
     example: 'Steampunk pipe',
     fields: [
       {
@@ -209,7 +212,7 @@ export const SHAPES: Array<Shape> = [
   {
     slug: 'curved-horn',
     name: 'Curved horn',
-    family: 'round',
+    category: 'bent-tubes',
     example: 'Demon horn',
     fields: [
       {
@@ -265,7 +268,7 @@ export const SHAPES: Array<Shape> = [
   {
     slug: 'cone',
     name: 'Cone',
-    family: 'round',
+    category: 'tubes',
     example: 'Horn tip',
     fields: [
       {
@@ -290,7 +293,7 @@ export const SHAPES: Array<Shape> = [
   {
     slug: 'truncated-cone',
     name: 'Truncated cone',
-    family: 'round',
+    category: 'tubes',
     example: 'Bracer',
     fields: [
       {
@@ -323,7 +326,7 @@ export const SHAPES: Array<Shape> = [
   {
     slug: 'dome',
     name: 'Dome',
-    family: 'round',
+    category: 'domes',
     example: 'Helmet crown',
     fields: [
       {
@@ -349,7 +352,7 @@ export const SHAPES: Array<Shape> = [
   {
     slug: 'oval-dome',
     name: 'Oval dome',
-    family: 'round',
+    category: 'shaped-domes',
     example: 'Shield boss',
     fields: [
       baseCircumference(450),
@@ -368,7 +371,7 @@ export const SHAPES: Array<Shape> = [
   {
     slug: 'pointed-dome',
     name: 'Pointed dome',
-    family: 'round',
+    category: 'shaped-domes',
     example: 'Pointed helmet',
     fields: [
       baseCircumference(600),
@@ -387,7 +390,7 @@ export const SHAPES: Array<Shape> = [
   {
     slug: 'sphere',
     name: 'Sphere',
-    family: 'round',
+    category: 'domes',
     example: 'Orb',
     fields: [
       {
@@ -405,7 +408,7 @@ export const SHAPES: Array<Shape> = [
   {
     slug: 'capsule',
     name: 'Capsule',
-    family: 'round',
+    category: 'shaped-domes',
     example: 'Power cell',
     fields: [
       {
@@ -431,7 +434,7 @@ export const SHAPES: Array<Shape> = [
   {
     slug: 'box',
     name: 'Box',
-    family: 'flat',
+    category: 'boxes',
     example: 'Belt pouch',
     fields: [
       {
@@ -468,7 +471,7 @@ export const SHAPES: Array<Shape> = [
   {
     slug: 'pyramid',
     name: 'Pyramid',
-    family: 'flat',
+    category: 'boxes',
     example: 'Shoulder spike',
     fields: [
       {
@@ -506,7 +509,7 @@ export const SHAPES: Array<Shape> = [
   {
     slug: 'prism',
     name: 'Prism',
-    family: 'flat',
+    category: 'boxes',
     example: 'Crystal',
     fields: [
       {
@@ -540,7 +543,7 @@ export const SHAPES: Array<Shape> = [
   {
     slug: 'tapered-prism',
     name: 'Tapered prism',
-    family: 'flat',
+    category: 'faceted',
     example: 'Faceted bracer',
     fields: [
       {
@@ -582,9 +585,48 @@ export const SHAPES: Array<Shape> = [
   },
 ];
 
-export const FAMILIES: Array<{ id: ShapeFamily; name: string }> = [
-  { id: 'round', name: 'Round' },
-  { id: 'flat', name: 'Flat-sided' },
+export interface Category {
+  id: ShapeCategory;
+  name: string;
+  shapes: Array<Shape>;
+}
+
+export interface Tier {
+  id: ShapeTier;
+  name: string;
+  /** What sets this tier apart, so a first-time maker knows where to start. */
+  summary: string;
+  categories: Array<Category>;
+}
+
+const categoryOf = (id: ShapeCategory, name: string): Category => ({
+  id,
+  name,
+  shapes: SHAPES.filter(shape => shape.category === id),
+});
+
+/** Every shape, basic first, each tier split into the categories makers browse. */
+export const TIERS: Array<Tier> = [
+  {
+    id: 'basic',
+    name: 'Basic shapes',
+    summary: 'Straight seams and simple curves. Start here.',
+    categories: [
+      categoryOf('tubes', 'Tubes and cones'),
+      categoryOf('domes', 'Domes and spheres'),
+      categoryOf('boxes', 'Boxes and prisms'),
+    ],
+  },
+  {
+    id: 'complex',
+    name: 'Complex shapes',
+    summary: 'Angled tops, bends, tapers and shaped curves.',
+    categories: [
+      categoryOf('bent-tubes', 'Angled and bent tubes'),
+      categoryOf('shaped-domes', 'Shaped domes and capsules'),
+      categoryOf('faceted', 'Faceted'),
+    ],
+  },
 ];
 
 export const isShapeSlug = (value: string): value is ShapeSlug =>

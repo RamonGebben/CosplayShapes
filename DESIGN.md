@@ -32,6 +32,11 @@ typography:
     fontSize: '24px'
     fontWeight: 900
     lineHeight: 1
+  brand:
+    fontFamily: 'Big Shoulders, Impact, sans-serif'
+    fontSize: '28px'
+    fontWeight: 900
+    lineHeight: 0.88
   body:
     fontFamily: 'Atkinson Hyperlegible, system-ui, sans-serif'
     fontSize: '15px'
@@ -147,7 +152,7 @@ Three saturated poster inks (ultramarine, magenta, yellow) over a neutral base o
 ### Primary
 
 - **Ultramarine Field** (ultramarine-field): the shape rail, the stage's title-card field, the picker intro field, the browser theme colour, and the dashed stitch and fold guides on the pattern. Text on it is paper white.
-- **Pale Ultramarine** (ultramarine-pale): secondary text that sits on the field: rail group labels, the rail footer, the picker's fact list and the stage summary readout.
+- **Pale Ultramarine** (ultramarine-pale): secondary text that sits on the field: rail tier labels, folded category names, the rail footer, the picker's fact list and the stage summary readout.
 
 ### Secondary
 
@@ -183,11 +188,12 @@ Three saturated poster inks (ultramarine, magenta, yellow) over a neutral base o
 ### Hierarchy
 
 - **Display** (900, 52px phone / 64px tablet / 72px small laptop / 88px desktop, line-height 0.88, uppercase, balanced wrap): the shape name on the stage and the brand title on the picker.
-- **Headline** (900, 30 / 34 / 36 / 40px, uppercase): the picker's family headings and the flat-pattern heading on the stage.
-- **Title** (900, 20 / 22 / 22 / 24px, line-height 1, uppercase): form section titles and shape-tile names.
+- **Headline** (900, 30 / 34 / 36 / 40px, uppercase): the picker's tier headings and the flat-pattern heading on the stage.
+- **Title** (900, 20 / 22 / 22 / 24px, line-height 1, uppercase): form section titles, the picker's category headings and shape-tile names.
+- **Brand** (900, 28px, line-height 0.88, uppercase): only the cosplay / shapes mark at the top of the rail. In the phone strip it drops to the title size.
 - **Body** (400 and 700, 16px below 1024px and 15px above, line-height 1.4): all UI text; field labels are bold. Lead copy runs at the title size, line-height 1.35, to 34ch.
 - **Small** (400, 13px): hints, examples and the line legend.
-- **Label** (700, 12px, 0.08em tracking, uppercase): only the Round and Flat-sided group labels inside the shape rail.
+- **Label** (700, 12px, 0.08em tracking, uppercase): only the Basic shapes and Complex shapes tier labels inside the shape rail.
 
 ### Named Rules
 
@@ -199,9 +205,9 @@ Three saturated poster inks (ultramarine, magenta, yellow) over a neutral base o
 
 On desktop the generator is a fixed three-column grid at full viewport height: the ultramarine rail (232px), the settings form (320 to 360px, scrolling on its own, ruled off with a 1px grey line), and the stage taking the rest. The stage is a size container. Its diagonal runs from 44% across at the top to 30% at the bottom; the title sits top left on the field, the flat-pattern heading top right, the legend bottom right, and the export bar runs under it with a 1.5px ink top rule.
 
-The picker is two columns: the intro (at least 360px, 40% wide) on a field whose diagonal runs from the right edge at the top to 84% at the bottom, and the shape grid (tiles at least 230px, 14px gaps).
+The picker is two columns: the intro (at least 360px, 40% wide) on a field whose diagonal runs from the right edge at the top to 84% at the bottom, pinned at full viewport height while the shape list scrolls past it (in windows at least 680px tall, so its facts at the bottom are always in view; shorter windows let it scroll with the page), and the shape list: a Basic shapes tier then a Complex shapes tier, each a headline over a 1.5px ink rule, then its categories as collapsible rows ruled in 1px grey, each opening onto a grid of tiles (at least 230px, 14px gaps).
 
-Below 1024px everything stacks into one column. The rail becomes a horizontal scrolling strip with its group labels hidden, the stage becomes a fixed band (78svh, between 520 and 720px) with the diagonal turned horizontal, and the export bar splits so its summary stays in the flow while paper size and Download PDF stick to the bottom of the screen.
+Below 1024px everything stacks into one column. The rail becomes a horizontal scrolling strip with its tier labels and category toggles hidden and every shape shown, the stage becomes a fixed band (78svh, between 520 and 720px) with the diagonal turned horizontal, and the export bar splits so its summary stays in the flow while paper size and Download PDF stick to the bottom of the screen.
 
 Spacing follows the theme scale (4, 8, 16, 24, 60, 120px on desktop; tighter on phones). Inside components, small hand-set paddings (7 to 14px) tune control density.
 
@@ -257,9 +263,14 @@ Heavy, square and inky.
 
 ### Navigation (Shape Rail)
 
-- **Style:** an ultramarine column with the brand in display caps at the top (the second word in yellow), then the shapes grouped under small tracked labels, each with a 22px line icon.
-- **States:** the current shape fills magenta with ink bold text; hover fills white with ultramarine text; focus uses a yellow outline inset 3px.
-- **Mobile:** a single horizontal scrolling row with the group labels visually hidden.
+- **Style:** an ultramarine column (scrolling on its own when tall) with the brand in display caps at the top (the second word in yellow), then two tiers under small tracked labels, Basic shapes and Complex shapes. Each tier holds categories; a category is a 13px bold toggle with a chevron, over its shapes, each with a 22px line icon.
+- **States:** the current shape fills magenta with ink bold text; hover fills white with ultramarine text; focus uses a yellow outline inset 3px. An open category's toggle is white, a folded one pale ultramarine, and hover turns it yellow. Basic categories start open; complex ones start folded unless they hold the current shape.
+- **Mobile:** a single horizontal scrolling row of every shape, with the tier labels visually hidden and the category headings removed. Links grow to 44px tall. The row opens scrolled so the current shape sits in the middle. The scrollbar is hidden on touch screens and shown thin in pale ultramarine for a mouse.
+
+### Category Rows (Picker)
+
+- **Style:** a full-width button inside an h3: the category name in title caps, then, when folded, a small muted line naming its shapes so it still says what it holds, and an ink chevron at the right. 1px rule-grey line below each category.
+- **States:** hover fills yellow; the chevron flips instantly with no animation (the One Motion Rule). Basic categories start open, complex ones folded.
 
 ### Shape Tiles
 

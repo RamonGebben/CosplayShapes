@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-31T10:04:59+00:00",
+  "generatedAt": "2026-11-01T16:37:04+00:00",
   "title": "Design System: Cosplay Shapes",
   "extensions": {
     "colorMeta": {
@@ -204,7 +204,7 @@
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "Picker family headings and the stage's flat-pattern heading. Responsive: 30 / 34 / 36 / 40px."
+        "purpose": "Picker tier headings and the stage's flat-pattern heading. Responsive: 30 / 34 / 36 / 40px."
       },
       "title": {
         "displayName": "Title",
@@ -224,7 +224,11 @@
       },
       "label": {
         "displayName": "Rail Group Label",
-        "purpose": "Only the Round / Flat-sided group labels in the shape rail; uppercase, tracked."
+        "purpose": "Only the Basic shapes / Complex shapes tier labels in the shape rail; uppercase, tracked."
+      },
+      "brand": {
+        "displayName": "Brand",
+        "purpose": "Only the cosplay / shapes mark at the top of the rail; uppercase, second word in yellow. 28px, dropping to the title size in the phone strip."
       }
     },
     "shadows": [],
@@ -344,9 +348,9 @@
       "name": "Shape Rail",
       "kind": "nav",
       "refersTo": "rail-link-active",
-      "description": "Ultramarine navigation column; the current shape is filled magenta.",
-      "html": "<nav class=\"ds-rail\"><a class=\"ds-brand\" href=\"#\">Cosplay <span>Shapes</span></a><h2 class=\"ds-rail-group\">Round</h2><a class=\"ds-rail-link\" href=\"#\" aria-current=\"page\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 22 22\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linejoin=\"round\"><path d=\"M11 2 4 16.5c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5L11 2Z\"/></svg>Cone</a><a class=\"ds-rail-link\" href=\"#\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 22 22\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linejoin=\"round\"><path d=\"M4 5.5a7 2.5 0 1 0 14 0a7 2.5 0 1 0 -14 0M4 5.5v11c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-11\"/></svg>Cylinder</a></nav>",
-      "css": ".ds-rail{display:flex;flex-direction:column;width:232px;padding:28px 16px 24px;background:#1d2bd6;color:#ffffff;font-family:'Atkinson Hyperlegible', system-ui, sans-serif;font-size:15px}.ds-brand{display:block;margin:0 4px 12px;font-family:'Big Shoulders', Impact, sans-serif;font-size:28px;font-weight:900;line-height:.88;text-transform:uppercase;color:inherit;text-decoration:none}.ds-brand span{color:#ffd23f}.ds-rail-group{margin:12px 4px 6px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#dfe2ff}.ds-rail-link{display:flex;align-items:center;gap:12px;padding:9px 10px;color:inherit;text-decoration:none;transition:background-color .15s ease-out}.ds-rail-link[aria-current=page]{background:#ff3d7f;color:#121212;font-weight:700}.ds-rail-link:not([aria-current=page]):hover{background:#ffffff;color:#1d2bd6}.ds-rail-link:focus-visible{outline:3px solid #ffd23f;outline-offset:-3px}"
+      "description": "Ultramarine navigation column: brand, tier labels, folding category toggles and shape links; the current shape is filled magenta.",
+      "html": "<nav class=\"ds-rail\"><a class=\"ds-brand\" href=\"#\">Cosplay <span>Shapes</span></a><h2 class=\"ds-rail-group\">Basic shapes</h2><button class=\"ds-rail-toggle\" type=\"button\" aria-expanded=\"true\">Tubes and cones<svg width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"square\" style=\"transform:rotate(180deg)\"><path d=\"M2 4.25 6 8.25l4-4\"/></svg></button><a class=\"ds-rail-link\" href=\"#\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 22 22\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linejoin=\"round\"><path d=\"M4 5.5a7 2.5 0 1 0 14 0a7 2.5 0 1 0 -14 0M4 5.5v11c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-11\"/></svg>Cylinder</a><a class=\"ds-rail-link\" href=\"#\" aria-current=\"page\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 22 22\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linejoin=\"round\"><path d=\"M11 2 4 16.5c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5L11 2Z\"/></svg>Cone</a></nav>",
+      "css": ".ds-rail{display:flex;flex-direction:column;width:232px;padding:28px 16px 24px;background:#1d2bd6;color:#ffffff;font-family:'Atkinson Hyperlegible', system-ui, sans-serif;font-size:15px}.ds-brand{display:block;margin:0 4px 12px;font-family:'Big Shoulders', Impact, sans-serif;font-size:28px;font-weight:900;line-height:.88;text-transform:uppercase;color:inherit;text-decoration:none}.ds-brand span{color:#ffd23f}.ds-rail-group{margin:12px 4px 6px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#dfe2ff}.ds-rail-link{display:flex;align-items:center;gap:12px;padding:9px 10px;color:inherit;text-decoration:none;transition:background-color .15s ease-out}.ds-rail-link[aria-current=page]{background:#ff3d7f;color:#121212;font-weight:700}.ds-rail-link:not([aria-current=page]):hover{background:#ffffff;color:#1d2bd6}.ds-rail-link:focus-visible{outline:3px solid #ffd23f;outline-offset:-3px}.ds-rail-toggle{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border:0;background:none;font:inherit;font-size:13px;font-weight:700;text-align:left;color:#dfe2ff;cursor:pointer;transition:color .15s ease-out}.ds-rail-toggle[aria-expanded=true]{color:#ffffff}.ds-rail-toggle>svg{margin-left:auto}.ds-rail-toggle:hover{color:#ffd23f}.ds-rail-toggle:focus-visible{outline:3px solid #ffd23f;outline-offset:-3px}"
     },
     {
       "name": "Shape Tile",

@@ -1,13 +1,15 @@
-import { ShapeIcon } from '~/atoms/ShapeIcon';
-import { FAMILIES, SHAPES, type ShapeSlug } from '~/utils/shapes';
+import { TIERS, type ShapeSlug } from '~/utils/shapes';
 import { Brand } from './components/Brand';
+import { Category } from './components/Category';
 import { Foot } from './components/Foot';
 import { GroupHeading } from './components/GroupHeading';
 import { Rail } from './components/Rail';
-import { RailLink } from './components/RailLink';
-import { RailList } from './components/RailList';
+import { Tier } from './components/Tier';
 
-/** The ultramarine rail: every shape, grouped, the current one in magenta. */
+/**
+ * The ultramarine rail: every shape, basic tier first, the current one in magenta. Basic categories
+ * start open; complex ones start folded unless they hold the current shape.
+ */
 export const ShapeRail = ({ active }: { active?: ShapeSlug }) => (
   <Rail aria-label="Shapes">
     <Brand href="/">
@@ -15,23 +17,21 @@ export const ShapeRail = ({ active }: { active?: ShapeSlug }) => (
       <br />
       <span>shapes</span>
     </Brand>
-    {FAMILIES.map(family => (
-      <section key={family.id} aria-labelledby={`rail-${family.id}`}>
-        <GroupHeading id={`rail-${family.id}`}>{family.name}</GroupHeading>
-        <RailList>
-          {SHAPES.filter(shape => shape.family === family.id).map(shape => (
-            <li key={shape.slug}>
-              <RailLink
-                href={`/${shape.slug}`}
-                aria-current={shape.slug === active ? 'page' : undefined}
-              >
-                <ShapeIcon slug={shape.slug} />
-                {shape.name}
-              </RailLink>
-            </li>
-          ))}
-        </RailList>
-      </section>
+    {TIERS.map(tier => (
+      <Tier key={tier.id} aria-labelledby={`rail-${tier.id}`}>
+        <GroupHeading id={`rail-${tier.id}`}>{tier.name}</GroupHeading>
+        {tier.categories.map(category => (
+          <Category
+            key={category.id}
+            category={category}
+            active={active}
+            defaultOpen={
+              tier.id === 'basic' ||
+              category.shapes.some(shape => shape.slug === active)
+            }
+          />
+        ))}
+      </Tier>
     ))}
     <Foot>Free. Prints at 100%.</Foot>
   </Rail>

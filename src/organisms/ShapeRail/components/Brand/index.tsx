@@ -19,6 +19,6 @@ export const Brand = styled(Link)`
   ${({ theme }) => theme.mq.lessThan('tabletLandscape')`
     flex: none;
     margin: 0;
-    font-size: 20px;
+    font-size: ${theme.fontSize('m')};
   `}
 `;
