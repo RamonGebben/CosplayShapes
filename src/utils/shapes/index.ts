@@ -6,7 +6,8 @@ export type ShapeSlug =
   | 'sphere'
   | 'box'
   | 'pyramid'
-  | 'prism';
+  | 'prism'
+  | 'tapered-prism';
 
 export type ShapeFamily = 'round' | 'flat';
 
@@ -316,6 +317,49 @@ export const SHAPES: Array<Shape> = [
         label: 'Length',
         example: 160,
         edge: 'length',
+      },
+    ],
+    options: [endsOption('Adds a flat cap for each end.')],
+  },
+  {
+    slug: 'tapered-prism',
+    name: 'Tapered prism',
+    family: 'flat',
+    example: 'Faceted bracer',
+    fields: [
+      {
+        kind: 'count',
+        key: 'sides',
+        label: 'Sides',
+        example: 8,
+        min: 3,
+        max: 12,
+        edge: 'seam',
+        hint: 'Six or eight read as faceted armour; fewer look more angular.',
+      },
+      {
+        kind: 'length',
+        key: 'top',
+        label: 'Top face width',
+        example: 32,
+        edge: 'top',
+        hint: 'One flat side at the top, from edge to edge.',
+      },
+      {
+        kind: 'length',
+        key: 'bottom',
+        label: 'Bottom face width',
+        example: 40,
+        edge: 'bottom',
+        hint: 'One flat side at the bottom, from edge to edge.',
+      },
+      {
+        kind: 'length',
+        key: 'height',
+        label: 'Height',
+        example: 180,
+        edge: 'height',
+        hint: SLOPE_HINT,
       },
     ],
     options: [endsOption('Adds a flat cap for each end.')],

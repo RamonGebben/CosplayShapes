@@ -1,5 +1,5 @@
 import { getShape, type ShapeSlug } from '~/utils/shapes';
-import { box, prism, pyramid } from './flat';
+import { box, prism, pyramid, taperedPrism } from './flat';
 import { cone, cylinder, dome, sphere, truncatedCone } from './round';
 import type { BuildInput, BuildResult } from './types';
 
@@ -26,6 +26,7 @@ const BUILDERS: Record<ShapeSlug, (input: BuildInput) => BuildResult> = {
   box,
   pyramid,
   prism,
+  'tapered-prism': taperedPrism,
 };
 
 /** Five metres: past this a value is far more likely a unit slip than a prop. */

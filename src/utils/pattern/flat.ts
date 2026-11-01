@@ -567,3 +567,209 @@ const prismStrip = (
     seamMm: input.seamMm,
   });
 };
+
+const MIN_TAPER_MM = 1;
+
+export const taperedPrism = (input: BuildInput): BuildResult => {
+  const { sides, top, bottom, height } = input.dims;
+  if (Math.abs(top - bottom) < MIN_TAPER_MM)
+    return {
+      ok: false,
+      field: 'top',
+      message:
+        'Top and bottom faces are the same width, so this is a prism. Use the Prism pattern instead.',
+    };
+  const ends = Boolean(input.options.ends);
+  const toInradius = (face: number) => face / (2 * Math.tan(Math.PI / sides));
+  const toFace = (inradius: number) => 2 * inradius * Math.tan(Math.PI / sides);
+  const wideIsBottom = bottom > top;
+  const wide = toInradius(Math.max(top, bottom));
+  const narrow = toInradius(Math.min(top, bottom));
+  const faceHeight = Math.hypot(height, wide - narrow);
+  // A slanted face moved half the thickness along its normal, as on a cone.
+  const offset = ((input.thicknessMm / 2) * faceHeight) / height;
+  const midWide = toFace(wide + offset);
+  const midNarrow = toFace(narrow + offset);
+  const wideKey = wideIsBottom ? 'bottom' : 'top';
+  const narrowKey = wideIsBottom ? 'top' : 'bottom';
+  const insideCap = input.material.join === 'butt';
+  const capFor = (
+    face: number,
+    midFace: number,
+    key: string,
+    name: string,
+  ) => ({
+    name,
+    cut: 1,
+    outline: regularPolygon(sides, insideCap ? face : midFace),
+    keys: [[key]],
+    tabs: isTabbed(input) ? range(sides) : [],
+  });
+  const caps: Array<FacePiece> = ends
+    ? [
+        capFor(
+          bottom,
+          wideIsBottom ? midWide : midNarrow,
+          'bottom',
+          'Bottom cap',
+        ),
+        capFor(top, wideIsBottom ? midNarrow : midWide, 'top', 'Top cap'),
+      ]
+    : [];
+  const trapezoid: Polyline = [
+    [(midWide - midNarrow) / 2, 0],
+    [(midWide + midNarrow) / 2, 0],
+    [midWide, faceHeight],
+    [0, faceHeight],
+  ];
+  const pieces = isTabbed(input)
+    ? [
+        taperedStrip(input, sides, midWide, midNarrow, faceHeight, {
+          wideKey,
+          narrowKey,
+        }),
+        ...facePieces(input, caps),
+      ]
+    : facePieces(input, [
+        {
+          name: 'Faces',
+          cut: sides,
+          // Narrow end up, so the face reads the way it stands.
+          outline: trapezoid,
+          keys: [
+            [narrowKey],
+            ['height', 'seam'],
+            [wideKey],
+            ['height', 'seam'],
+          ],
+        },
+        ...caps,
+      ]);
+  const relettered = pieces.map((piece, index) => ({
+    ...piece,
+    id: letter(index),
+  }));
+  const circumradius = (face: number) => face / (2 * Math.sin(Math.PI / sides));
+  const corner = (index: number, y: number, face: number): Vertex => {
+    const angle = (TAU * index) / sides + Math.PI / sides;
+    const radius = circumradius(face);
+    return [radius * Math.sin(angle), y, radius * Math.cos(angle)];
+  };
+  const vertices = [
+    ...range(sides).map(index => corner(index, 0, bottom)),
+    ...range(sides).map(index => corner(index, height, top)),
+  ];
+  const next = (index: number) => (index + 1) % sides;
+  const cornerEdge = Math.hypot(
+    height,
+    circumradius(midWide) - circumradius(midNarrow),
+  );
+  return {
+    ok: true,
+    pattern: {
+      pieces: relettered,
+      facts: [
+        { label: 'Face', lengths: [midWide, midNarrow, faceHeight] },
+        { label: 'Corner edge', lengths: [cornerEdge] },
+        {
+          label: 'Across the flats',
+          lengths: [2 * toInradius(bottom), 2 * toInradius(top)],
+        },
+      ],
+      notes: flatNotes(input),
+      model: {
+        kind: 'solid',
+        vertices,
+        faces: [
+          ...range(sides).map(index => [
+            index,
+            next(index),
+            sides + next(index),
+            sides + index,
+          ]),
+          ...(ends
+            ? [range(sides).reverse(), range(sides).map(index => sides + index)]
+            : []),
+        ],
+        lines: segmentLines(vertices, [
+          ...range(sides).map(
+            index =>
+              [index, next(index), ['bottom']] as [
+                number,
+                number,
+                Array<string>,
+              ],
+          ),
+          ...range(sides).map(
+            index =>
+              [sides + index, sides + next(index), ['top']] as [
+                number,
+                number,
+                Array<string>,
+              ],
+          ),
+          ...range(sides).map(
+            index =>
+              [index, sides + index, ['height', 'seam']] as [
+                number,
+                number,
+                Array<string>,
+              ],
+          ),
+        ]),
+      },
+    },
+  };
+};
+
+/**
+ * Every face of the tapered prism fanned out around the point where its
+ * corner edges would meet, with fold lines between, for card.
+ */
+const taperedStrip = (
+  input: BuildInput,
+  sides: number,
+  wide: number,
+  narrow: number,
+  faceHeight: number,
+  { wideKey, narrowKey }: { wideKey: string; narrowKey: string },
+): Piece => {
+  // Each face is the bottom of an isosceles triangle with its tip at the apex.
+  const halfDiff = (wide - narrow) / 2;
+  const outerCorner =
+    Math.hypot(faceHeight, halfDiff) * (wide / (wide - narrow));
+  const innerCorner = (outerCorner * narrow) / wide;
+  const step = 2 * Math.asin(wide / (2 * outerCorner));
+  const angles = range(sides + 1).map(
+    index => -(step * sides) / 2 + index * step,
+  );
+  const outerRim = angles.map(angle => arc(outerCorner, angle, angle, 1)[0]);
+  const innerRim = angles.map(angle => arc(innerCorner, angle, angle, 1)[0]);
+  const outline: Polyline = [...outerRim, ...[...innerRim].reverse()];
+  return makePiece({
+    id: 'A',
+    name: 'Faces',
+    cut: 1,
+    outline,
+    edges: [
+      ...range(sides).flatMap(index => [
+        { keys: [wideKey], points: [outerRim[index], outerRim[index + 1]] },
+        { keys: [narrowKey], points: [innerRim[index], innerRim[index + 1]] },
+      ]),
+      { keys: ['height', 'seam'], points: [innerRim[0], outerRim[0]] },
+      {
+        keys: ['height', 'seam'],
+        points: [outerRim[sides], innerRim[sides]],
+      },
+    ],
+    folds: range(sides - 1).map(index => [
+      innerRim[index + 1],
+      outerRim[index + 1],
+    ]),
+    notches: range(sides).map(index =>
+      notch(outerRim[index], outerRim[index + 1], 0.5, outline),
+    ),
+    tabs: [sides],
+    seamMm: input.seamMm,
+  });
+};

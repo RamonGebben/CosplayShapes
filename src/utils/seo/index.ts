@@ -65,6 +65,15 @@ const SHAPE_SEO: Record<ShapeSlug, ShapeSeo> = {
     uses: 'crystals and gems',
     keywords: ['prism template', 'crystal pattern', 'hexagonal prism net'],
   },
+  'tapered-prism': {
+    uses: 'faceted bracers and greaves',
+    keywords: [
+      'tapered prism template',
+      'faceted bracer pattern',
+      'frustum net',
+      'greave template',
+    ],
+  },
 };
 
 export const shapePath = (slug: ShapeSlug) => `/${slug}`;

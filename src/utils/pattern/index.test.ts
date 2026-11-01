@@ -149,6 +149,47 @@ describe('buildPattern', () => {
     expect(result).toMatchObject({ ok: false, field: 'sides' });
   });
 
+  it('cuts tapered prism faces to both face widths and the slanted height', () => {
+    const dims = { sides: 6, top: 30, bottom: 40, height: 120 };
+    const pattern = build('tapered-prism', input(dims));
+    const across = (face: number) => face / Math.tan(Math.PI / 6);
+    expect(pattern.pieces[0].cut).toBe(6);
+    expect(edgeLength(pattern, 'top')).toBeCloseTo(30, 6);
+    expect(edgeLength(pattern, 'bottom')).toBeCloseTo(40, 6);
+    expect(bounds(pattern.pieces[0].outline).height).toBeCloseTo(
+      Math.hypot(120, (across(40) - across(30)) / 2),
+      6,
+    );
+  });
+
+  it('fans a card tapered prism into one strip with matching seams', () => {
+    const dims = { sides: 8, top: 32, bottom: 40, height: 180 };
+    const card = build(
+      'tapered-prism',
+      input(dims, { material: getMaterial('paper') }),
+    );
+    const strip = card.pieces[0];
+    const widths = (key: string) =>
+      strip.edges
+        .filter(edge => edge.keys.includes(key))
+        .map(edge => pathLength(edge.points));
+    expect(widths('bottom')).toHaveLength(8);
+    widths('bottom').forEach(width => expect(width).toBeCloseTo(40, 6));
+    widths('top').forEach(width => expect(width).toBeCloseTo(32, 6));
+    const [first, last] = widths('seam');
+    expect(first).toBeCloseTo(last, 6);
+    // Seven folds between the eight faces, plus the glue tab's own fold.
+    expect(strip.folds).toHaveLength(8);
+  });
+
+  it('refuses a tapered prism with equal ends', () => {
+    const result = buildPattern(
+      'tapered-prism',
+      input({ sides: 6, top: 40, bottom: 40, height: 100 }),
+    );
+    expect(result).toMatchObject({ ok: false, field: 'top' });
+  });
+
   it('adds seam allowance outside the outline', () => {
     const pattern = build(
       'cylinder',

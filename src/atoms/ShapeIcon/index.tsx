@@ -12,6 +12,8 @@ const PATHS: Record<ShapeSlug, string> = {
   box: 'M4 7l7-4 7 4v9l-7 4-7-4V7Zm0 0 7 4 7-4M11 11v9',
   pyramid: 'M11 2 3 16.5l8 3.5 8-3.5L11 2Zm0 0v18',
   prism: 'M7 3h8l4 3.5v11L15 20H7l-4-2.5v-11L7 3Zm0 0v17M15 3v17',
+  'tapered-prism':
+    'M8 3h6l2.5 3L19 17.5 15 20H7l-4-2.5L5.5 6 8 3Zm0 0-1 17M14 3l1 17',
 };
 
 /** A line drawing of the shape, stroked in the current text colour. */
