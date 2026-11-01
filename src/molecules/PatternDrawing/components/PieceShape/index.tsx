@@ -2,8 +2,8 @@
 
 import { useTheme } from 'styled-components';
 import { bounds, type Piece } from '~/utils/pattern';
-import { labelPlacement } from '~/utils/patternText';
-import { pieceLabel, toPath } from '~/utils/svgExport';
+import { besideSpot, labelPlacement } from '~/utils/patternText';
+import { pieceLabel, round, toPath } from '~/utils/svgExport';
 
 export interface PieceShapeProps {
   piece: Piece;
@@ -18,6 +18,8 @@ export interface PieceShapeProps {
   highlight?: string;
   labelSize?: number;
   materialLabel: string;
+  /** The other pieces' boxes, relative to this piece, for a label set beside it. */
+  others?: Array<{ minX: number; minY: number; width: number; height: number }>;
 }
 
 /** One piece: its paper, or its cut line, guides, notches, lit edges and label. */
@@ -30,8 +32,10 @@ export const PieceShape = ({
   highlight,
   labelSize,
   materialLabel,
+  others = [],
 }: PieceShapeProps) => {
   const theme = useTheme();
+  const translate = `translate(${round(x)} ${round(y)})`;
   const ink = theme.color('quaternary');
   const guide = theme.color('primary');
   const stroke = {
@@ -42,7 +46,7 @@ export const PieceShape = ({
   if (layer === 'paper')
     return (
       <path
-        transform={`translate(${x} ${y})`}
+        transform={translate}
         d={toPath(piece.cutLine, true)}
         style={{ fill: theme.color('background', 'emphasis') }}
       />
@@ -60,12 +64,18 @@ export const PieceShape = ({
           Math.max(label.title.length, label.detail.length),
           labelSize,
         );
-  const [lx, ly] =
-    placement === 'beside'
-      ? [box.minX + box.width + (labelSize ?? 0), piece.label[1]]
-      : piece.label;
+  const beside =
+    placement === 'beside' && labelSize !== undefined
+      ? besideSpot(
+          box,
+          Math.max(label.title.length, label.detail.length),
+          labelSize,
+          others,
+        )
+      : undefined;
+  const [lx, ly] = beside ? [beside.x, beside.y] : piece.label;
   return (
-    <g transform={`translate(${x} ${y})`}>
+    <g transform={translate}>
       <path
         d={toPath(piece.cutLine, true)}
         style={{ ...stroke, stroke: ink }}
@@ -108,7 +118,7 @@ export const PieceShape = ({
         <text
           x={lx}
           y={ly}
-          textAnchor={placement === 'beside' ? 'start' : 'middle'}
+          textAnchor={beside?.anchor ?? 'middle'}
           transform={
             placement === 'along' ? `rotate(-90 ${lx} ${ly})` : undefined
           }

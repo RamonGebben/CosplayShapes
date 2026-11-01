@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { useTheme } from 'styled-components';
 import type { Layout } from '~/utils/layout';
+import { bounds } from '~/utils/pattern';
 import type { Unit } from '~/utils/units';
 import { PieceShape } from './components/PieceShape';
 import { Surface } from './components/Surface';
@@ -161,6 +162,16 @@ export const PatternDrawing = ({
             highlight={highlight}
             labelSize={labelSize}
             materialLabel={materialLabel}
+            others={layout.placed
+              .filter(other => other.piece.id !== piece.id)
+              .map(other => {
+                const box = bounds(other.piece.cutLine);
+                return {
+                  ...box,
+                  minX: box.minX + other.x - x,
+                  minY: box.minY + other.y - y,
+                };
+              })}
           />
         ))}
       </Svg>

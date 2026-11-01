@@ -1,7 +1,8 @@
 import type { Layout } from '~/utils/layout';
 import type { Piece, Polyline } from '~/utils/pattern';
 
-const round = (value: number) => Math.round(value * 1000) / 1000;
+/** To the micron, so float noise between JS engines never reaches the markup. */
+export const round = (value: number) => Math.round(value * 1000) / 1000;
 
 /** An SVG path through the points, closed back to the start when asked. */
 export const toPath = (points: Polyline, close = false, dx = 0, dy = 0) =>

@@ -2,7 +2,13 @@ import { describe, expect, it } from 'vitest';
 import { PAPERS, layoutPattern } from '~/utils/layout';
 import { getMaterial } from '~/utils/materials';
 import { buildPattern } from '~/utils/pattern';
-import { exportSummary, formatFact, labelPlacement, materialLabel } from '.';
+import {
+  besideSpot,
+  exportSummary,
+  formatFact,
+  labelPlacement,
+  materialLabel,
+} from '.';
 
 describe('exportSummary', () => {
   it('counts pieces and printed pages', () => {
@@ -48,5 +54,31 @@ describe('labelPlacement', () => {
 
   it('sets the label beside a piece too small either way', () => {
     expect(labelPlacement({ width: 10, height: 20 }, 16, 5)).toBe('beside');
+  });
+});
+
+describe('besideSpot', () => {
+  const piece = { minX: 0, minY: 0, width: 10, height: 20 };
+
+  it('sets the label to the right of a piece with room there', () => {
+    expect(besideSpot(piece, 16, 5, [])).toEqual({
+      x: 15,
+      y: 10,
+      anchor: 'start',
+    });
+  });
+
+  it('moves the label left when another piece sits to the right', () => {
+    const neighbour = { minX: 20, minY: 0, width: 30, height: 30 };
+    expect(besideSpot(piece, 16, 5, [neighbour]).anchor).toBe('end');
+  });
+
+  it('drops the label below a piece hemmed in on both sides', () => {
+    const left = { minX: -40, minY: 0, width: 30, height: 30 };
+    const right = { minX: 20, minY: 0, width: 30, height: 30 };
+    expect(besideSpot(piece, 16, 5, [left, right])).toMatchObject({
+      x: 5,
+      anchor: 'middle',
+    });
   });
 });

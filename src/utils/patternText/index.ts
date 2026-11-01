@@ -50,3 +50,89 @@ export const labelPlacement = (
   if (length < piece.height * 0.9 && depth < piece.width * 0.9) return 'along';
   return 'beside';
 };
+
+interface Box {
+  minX: number;
+  minY: number;
+  width: number;
+  height: number;
+}
+
+export interface BesideSpot {
+  x: number;
+  y: number;
+  anchor: 'start' | 'middle' | 'end';
+}
+
+const overlaps = (a: Box, b: Box) =>
+  a.minX < b.minX + b.width &&
+  b.minX < a.minX + a.width &&
+  a.minY < b.minY + b.height &&
+  b.minY < a.minY + a.height;
+
+/**
+ * Where a label set beside a piece goes: to its right, else its left, below
+ * or above, whichever first keeps clear of the other pieces. The point is the
+ * first line's baseline, in the same frame as the boxes.
+ */
+export const besideSpot = (
+  piece: Box,
+  longestLine: number,
+  fontSize: number,
+  others: Array<Box>,
+): BesideSpot => {
+  const width = longestLine * fontSize * GLYPH_EM;
+  const depth = fontSize * 2.6;
+  // The baseline sits a little under the top of the two lines.
+  const ascent = fontSize * 0.9;
+  const right = piece.minX + piece.width;
+  const bottom = piece.minY + piece.height;
+  const middleX = piece.minX + piece.width / 2;
+  const middleY = piece.minY + piece.height / 2;
+  const spots: Array<{ spot: BesideSpot; box: Box }> = [
+    {
+      spot: { x: right + fontSize, y: middleY, anchor: 'start' },
+      box: {
+        minX: right + fontSize,
+        minY: middleY - ascent,
+        width,
+        height: depth,
+      },
+    },
+    {
+      spot: { x: piece.minX - fontSize, y: middleY, anchor: 'end' },
+      box: {
+        minX: piece.minX - fontSize - width,
+        minY: middleY - ascent,
+        width,
+        height: depth,
+      },
+    },
+    {
+      spot: { x: middleX, y: bottom + fontSize + ascent, anchor: 'middle' },
+      box: {
+        minX: middleX - width / 2,
+        minY: bottom + fontSize,
+        width,
+        height: depth,
+      },
+    },
+    {
+      spot: {
+        x: middleX,
+        y: piece.minY - fontSize - depth + ascent,
+        anchor: 'middle',
+      },
+      box: {
+        minX: middleX - width / 2,
+        minY: piece.minY - fontSize - depth,
+        width,
+        height: depth,
+      },
+    },
+  ];
+  const clear = spots.find(
+    ({ box }) => !others.some(other => overlaps(box, other)),
+  );
+  return (clear ?? spots[0]).spot;
+};
