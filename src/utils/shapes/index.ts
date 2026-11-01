@@ -18,6 +18,10 @@ export interface LengthField {
   example: number;
   /** Which edges of the pattern and the model this measurement is. */
   edge: string;
+  /** Set on a measurement around a circle, which the maker can also give across. */
+  diameterLabel?: string;
+  /** How to take the measurement, where the label alone is ambiguous. */
+  hint?: string;
 }
 
 export interface CountField {
@@ -32,6 +36,9 @@ export interface CountField {
 }
 
 export type ShapeField = LengthField | CountField;
+
+/** Which of a round field's two inputs, around (tape) or across (ruler). */
+export type RoundMeasure = 'circumference' | 'diameter';
 
 export interface ShapeOption {
   key: string;
@@ -49,6 +56,8 @@ export interface Shape {
   fields: Array<ShapeField>;
   options: Array<ShapeOption>;
 }
+
+const SLOPE_HINT = 'Straight up from the base, not along the slope.';
 
 const endsOption = (hint: string): ShapeOption => ({
   key: 'ends',
@@ -68,6 +77,7 @@ export const SHAPES: Array<Shape> = [
         kind: 'length',
         key: 'circumference',
         label: 'Circumference',
+        diameterLabel: 'Diameter',
         example: 280,
         edge: 'circumference',
       },
@@ -91,6 +101,7 @@ export const SHAPES: Array<Shape> = [
         kind: 'length',
         key: 'circumference',
         label: 'Base circumference',
+        diameterLabel: 'Base diameter',
         example: 220,
         edge: 'circumference',
       },
@@ -100,6 +111,7 @@ export const SHAPES: Array<Shape> = [
         label: 'Height',
         example: 150,
         edge: 'height',
+        hint: SLOPE_HINT,
       },
     ],
     options: [endsOption('Adds a round cap for the base.')],
@@ -114,6 +126,7 @@ export const SHAPES: Array<Shape> = [
         kind: 'length',
         key: 'top',
         label: 'Top circumference',
+        diameterLabel: 'Top diameter',
         example: 260,
         edge: 'top',
       },
@@ -121,6 +134,7 @@ export const SHAPES: Array<Shape> = [
         kind: 'length',
         key: 'bottom',
         label: 'Bottom circumference',
+        diameterLabel: 'Bottom diameter',
         example: 320,
         edge: 'bottom',
       },
@@ -130,6 +144,7 @@ export const SHAPES: Array<Shape> = [
         label: 'Height',
         example: 180,
         edge: 'height',
+        hint: SLOPE_HINT,
       },
     ],
     options: [endsOption('Adds a round cap for each end.')],
@@ -144,6 +159,7 @@ export const SHAPES: Array<Shape> = [
         kind: 'length',
         key: 'circumference',
         label: 'Base circumference',
+        diameterLabel: 'Base diameter',
         example: 600,
         edge: 'circumference',
       },
@@ -153,6 +169,7 @@ export const SHAPES: Array<Shape> = [
         label: 'Height',
         example: 95,
         edge: 'height',
+        hint: 'From the rim straight up to the top, not over the curve.',
       },
       {
         kind: 'count',
@@ -177,6 +194,7 @@ export const SHAPES: Array<Shape> = [
         kind: 'length',
         key: 'circumference',
         label: 'Circumference',
+        diameterLabel: 'Diameter',
         example: 400,
         edge: 'circumference',
       },
@@ -256,6 +274,7 @@ export const SHAPES: Array<Shape> = [
         label: 'Height',
         example: 110,
         edge: 'height',
+        hint: SLOPE_HINT,
       },
     ],
     options: [
@@ -289,6 +308,7 @@ export const SHAPES: Array<Shape> = [
         label: 'Face width',
         example: 40,
         edge: 'face',
+        hint: 'One flat side, from edge to edge.',
       },
       {
         kind: 'length',
@@ -318,3 +338,11 @@ export const getExampleDims = (shape: Shape) =>
 
 export const getExampleOptions = (shape: Shape) =>
   Object.fromEntries(shape.options.map(option => [option.key, option.example]));
+
+/** A length around a circle, which the maker can also give across. */
+export type RoundField = LengthField & { diameterLabel: string };
+
+export const isRoundField = (field: ShapeField): field is RoundField =>
+  field.kind === 'length' && field.diameterLabel !== undefined;
+
+export const hasRoundFields = (shape: Shape) => shape.fields.some(isRoundField);

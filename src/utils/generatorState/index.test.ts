@@ -29,6 +29,47 @@ describe('generatorReducer', () => {
     expect(state.dims.height).toBe('abc');
   });
 
+  it('starts each round edge with its diameter worked out', () => {
+    const state = initialState('truncated-cone');
+    expect(state.diameters).toEqual({ top: '8.28', bottom: '10.19' });
+  });
+
+  it('fills in the diameter as the circumference is typed', () => {
+    const state = generatorReducer(initialState('cylinder'), {
+      type: 'dim',
+      key: 'circumference',
+      value: '31.4',
+    });
+    expect(state.diameters.circumference).toBe('9.99');
+  });
+
+  it('fills in the circumference as the diameter is typed', () => {
+    const state = generatorReducer(initialState('cylinder'), {
+      type: 'diameter',
+      key: 'circumference',
+      value: '10',
+    });
+    expect(state.dims.circumference).toBe('31.4');
+  });
+
+  it('blanks the other of a pair while the typed one isn’t a number', () => {
+    const state = generatorReducer(initialState('cylinder'), {
+      type: 'diameter',
+      key: 'circumference',
+      value: '',
+    });
+    expect(state.dims.circumference).toBe('');
+  });
+
+  it('converts both of a pair when the unit changes', () => {
+    const state = generatorReducer(initialState('cylinder'), {
+      type: 'unit',
+      unit: 'in',
+    });
+    expect(state.dims.circumference).toBe('11.02');
+    expect(state.diameters.circumference).toBe('3.508');
+  });
+
   it('applies a material’s usual thickness and seam settings', () => {
     const state = generatorReducer(initialState('dome'), {
       type: 'material',
@@ -49,6 +90,28 @@ describe('toBuildInput', () => {
     expect(errors).toEqual({});
     expect(input.dims).toEqual({ circumference: 600, height: 95, gores: 8 });
     expect(input.thicknessMm).toBe(6);
+  });
+
+  it('builds from the diameter when that was typed last', () => {
+    const state = generatorReducer(initialState('cylinder'), {
+      type: 'diameter',
+      key: 'circumference',
+      value: '10',
+    });
+    const { input } = toBuildInput(state);
+    expect(input.dims.circumference).toBeCloseTo(100 * Math.PI, 6);
+    expect(input.dims.height).toBe(60);
+  });
+
+  it('reports a pair’s error once, for whichever was typed', () => {
+    const state = generatorReducer(initialState('cylinder'), {
+      type: 'diameter',
+      key: 'circumference',
+      value: 'x',
+    });
+    expect(toBuildInput(state).errors).toEqual({
+      circumference: 'Enter a number.',
+    });
   });
 
   it('reports every field it can’t read', () => {

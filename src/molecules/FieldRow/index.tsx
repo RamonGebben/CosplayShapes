@@ -13,6 +13,8 @@ export interface FieldRowProps {
   unitName?: string;
   error?: string;
   hint?: string;
+  /** Leaves off the rule below, so this row reads as one with the next. */
+  joined?: boolean;
   children: ReactNode;
 }
 
@@ -30,9 +32,10 @@ export const FieldRow = ({
   unitName,
   error,
   hint,
+  joined = false,
   children,
 }: FieldRowProps) => (
-  <Row $wide={unit === undefined}>
+  <Row $wide={unit === undefined} $joined={joined}>
     <Label htmlFor={id}>
       {label}
       {unitName && <VisuallyHidden> in {unitName}</VisuallyHidden>}

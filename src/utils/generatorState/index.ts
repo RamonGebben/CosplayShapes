@@ -10,6 +10,8 @@ import {
   getExampleDims,
   getExampleOptions,
   getShape,
+  isRoundField,
+  type RoundMeasure,
   type ShapeSlug,
 } from '~/utils/shapes';
 import {
@@ -25,6 +27,10 @@ export interface GeneratorState {
   slug: ShapeSlug;
   unit: Unit;
   dims: Record<string, string>;
+  /** Round fields given across, keyed like dims; each pair fills in the other. */
+  diameters: Record<string, string>;
+  /** Which of a round field's pair was typed last, so the pattern is built from it. */
+  measuredBy: Record<string, RoundMeasure>;
   options: Record<string, boolean>;
   material: MaterialId;
   /** Always in mm: foam and Worbla are sold by the millimetre everywhere. */
@@ -39,6 +45,7 @@ export interface GeneratorState {
 export type GeneratorAction =
   | { type: 'unit'; unit: Unit }
   | { type: 'dim'; key: string; value: string }
+  | { type: 'diameter'; key: string; value: string }
   | { type: 'option'; key: string; value: boolean }
   | { type: 'material'; material: MaterialId }
   | { type: 'thickness'; value: string }
@@ -52,10 +59,39 @@ const DEFAULT_SEAM_MM = 10;
 const formatThickness = (mm: number) => String(roundTo(mm, 1));
 
 /** Shows a stored length in the unit, or the raw text if it doesn't parse. */
-const inUnit = (raw: string, from: Unit, to: Unit) => {
+const inUnit = (raw: string, from: Unit, to: Unit, extraPlaces = 0) => {
   const value = parseInput(raw);
   if (value === undefined) return raw;
-  return toInputValue(fromUnit(value, from), to);
+  return toInputValue(fromUnit(value, from), to, extraPlaces);
+};
+
+// Dividing by π would round away a millimetre at the unit's usual precision,
+// so diameters keep one more place.
+const DIAMETER_EXTRA_PLACES = 1;
+
+/** Works out one of a round field's pair from the other, blank if it doesn't parse. */
+const counterpart = (raw: string, unit: Unit, to: RoundMeasure) => {
+  const value = parseInput(raw);
+  if (value === undefined) return '';
+  const mm = fromUnit(value, unit);
+  return to === 'diameter'
+    ? toInputValue(mm / Math.PI, unit, DIAMETER_EXTRA_PLACES)
+    : toInputValue(mm * Math.PI, unit);
+};
+
+/** Whether a round field was last typed as a diameter, so its errors belong there. */
+export const isMeasuredAcross = (state: GeneratorState, key: string) =>
+  state.measuredBy[key] === 'diameter';
+
+/** The text the pattern is built from for a field, as a circumference if round. */
+const typedLength = (state: GeneratorState, key: string) => {
+  const raw = isMeasuredAcross(state, key)
+    ? state.diameters[key]
+    : state.dims[key];
+  const value = parseInput(raw);
+  if (value === undefined) return undefined;
+  const mm = fromUnit(value, state.unit);
+  return isMeasuredAcross(state, key) ? mm * Math.PI : mm;
 };
 
 export const initialState = (
@@ -79,6 +115,19 @@ export const initialState = (
           : toInputValue(examples[field.key], unit),
       ]),
     ),
+    diameters: Object.fromEntries(
+      shape.fields
+        .filter(isRoundField)
+        .map(field => [
+          field.key,
+          toInputValue(
+            examples[field.key] / Math.PI,
+            unit,
+            DIAMETER_EXTRA_PLACES,
+          ),
+        ]),
+    ),
+    measuredBy: {},
     options: getExampleOptions(shape),
     material: material.id,
     thickness: formatThickness(material.thicknessMm),
@@ -112,10 +161,36 @@ export const generatorReducer = (
         ...state,
         unit: action.unit,
         dims: convertDims(state, action.unit),
+        diameters: Object.fromEntries(
+          Object.entries(state.diameters).map(([key, raw]) => [
+            key,
+            inUnit(raw, state.unit, action.unit, DIAMETER_EXTRA_PLACES),
+          ]),
+        ),
         seamAmount: inUnit(state.seamAmount, state.unit, action.unit),
       };
     case 'dim':
-      return { ...state, dims: { ...state.dims, [action.key]: action.value } };
+      return {
+        ...state,
+        dims: { ...state.dims, [action.key]: action.value },
+        ...(action.key in state.diameters && {
+          diameters: {
+            ...state.diameters,
+            [action.key]: counterpart(action.value, state.unit, 'diameter'),
+          },
+          measuredBy: { ...state.measuredBy, [action.key]: 'circumference' },
+        }),
+      };
+    case 'diameter':
+      return {
+        ...state,
+        dims: {
+          ...state.dims,
+          [action.key]: counterpart(action.value, state.unit, 'circumference'),
+        },
+        diameters: { ...state.diameters, [action.key]: action.value },
+        measuredBy: { ...state.measuredBy, [action.key]: 'diameter' },
+      };
     case 'option':
       return {
         ...state,
@@ -163,7 +238,11 @@ export const toBuildInput = (
   const shape = getShape(state.slug);
   const material = getMaterial(state.material);
   const dimErrors = shape.fields
-    .filter(field => parseInput(state.dims[field.key]) === undefined)
+    .filter(field =>
+      field.kind === 'count'
+        ? parseInput(state.dims[field.key]) === undefined
+        : typedLength(state, field.key) === undefined,
+    )
     .map(field => [field.key, 'Enter a number.'] as const);
   const thickness = parseInput(state.thickness);
   const seam = parseInput(state.seamAmount);
@@ -187,13 +266,12 @@ export const toBuildInput = (
   return {
     input: {
       dims: Object.fromEntries(
-        shape.fields.map(field => {
-          const value = parseInput(state.dims[field.key]) ?? Number.NaN;
-          return [
-            field.key,
-            field.kind === 'count' ? value : fromUnit(value, state.unit),
-          ];
-        }),
+        shape.fields.map(field => [
+          field.key,
+          (field.kind === 'count'
+            ? parseInput(state.dims[field.key])
+            : typedLength(state, field.key)) ?? Number.NaN,
+        ]),
       ),
       options: state.options,
       material,

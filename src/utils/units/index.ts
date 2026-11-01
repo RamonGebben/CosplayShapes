@@ -14,9 +14,14 @@ export const roundTo = (value: number, places: number) => {
   return Math.round(value * factor) / factor;
 };
 
-/** A length as the number an input shows, rounded to the unit's precision. */
-export const toInputValue = (mm: number, unit: Unit) =>
-  roundTo(toUnit(mm, unit), PLACES[unit]).toFixed(PLACES[unit]);
+/**
+ * A length as the number an input shows, rounded to the unit's precision
+ * plus any extra places.
+ */
+export const toInputValue = (mm: number, unit: Unit, extraPlaces = 0) => {
+  const places = PLACES[unit] + extraPlaces;
+  return roundTo(toUnit(mm, unit), places).toFixed(places);
+};
 
 /** A length with its unit, joined by a no-break space so they never part. */
 export const formatLength = (mm: number, unit: Unit, places = PLACES[unit]) =>

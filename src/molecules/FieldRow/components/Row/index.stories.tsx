@@ -5,6 +5,7 @@ const meta = {
   component: Row,
   args: {
     $wide: false,
+    $joined: false,
     children: (
       <>
         <span>Height</span>

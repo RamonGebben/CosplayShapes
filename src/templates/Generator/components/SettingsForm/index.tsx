@@ -13,10 +13,12 @@ import type {
 } from '~/utils/generatorState';
 import { MATERIALS, getMaterial, type MaterialId } from '~/utils/materials';
 import type { Fact } from '~/utils/pattern';
-import type { Shape } from '~/utils/shapes';
+import { hasRoundFields, isRoundField, type Shape } from '~/utils/shapes';
 import type { Unit } from '~/utils/units';
 import { Column } from './components/Column';
+import { MeasureHelp } from './components/MeasureHelp';
 import { Readout } from './components/Readout';
+import { RoundPair } from './components/RoundPair';
 import { Section } from './components/Section';
 
 const UNIT_NAMES: Record<Unit, string> = {
@@ -65,39 +67,54 @@ export const SettingsForm = ({
         onChange={unit => dispatch({ type: 'unit', unit })}
       />
       <Section title="Size" aside={`Example: ${shape.example.toLowerCase()}`}>
-        {shape.fields.map(item => (
-          <FieldRow
-            key={item.key}
-            id={`field-${item.key}`}
-            label={item.label}
-            unit={item.kind === 'length' ? state.unit : ''}
-            unitName={
-              item.kind === 'length' ? UNIT_NAMES[state.unit] : undefined
-            }
-            error={errors[item.key]}
-            hint={item.kind === 'count' ? item.hint : undefined}
-          >
-            <Input
-              {...field(item.key)}
-              aria-describedby={describedBy(
-                `field-${item.key}`,
-                errors[item.key],
-                item.kind === 'count' ? item.hint : undefined,
-              )}
-              inputMode={item.kind === 'count' ? 'numeric' : 'decimal'}
-              autoComplete="off"
-              value={state.dims[item.key]}
-              onFocus={() => onEdge(item.edge)}
-              onChange={event =>
-                dispatch({
-                  type: 'dim',
-                  key: item.key,
-                  value: event.target.value,
-                })
+        {hasRoundFields(shape) && <MeasureHelp />}
+        {shape.fields.map(item => {
+          if (isRoundField(item))
+            return (
+              <RoundPair
+                key={item.key}
+                field={item}
+                state={state}
+                errors={errors}
+                dispatch={dispatch}
+                unitName={UNIT_NAMES[state.unit]}
+                onFocus={() => onEdge(item.edge)}
+              />
+            );
+          return (
+            <FieldRow
+              key={item.key}
+              id={`field-${item.key}`}
+              label={item.label}
+              unit={item.kind === 'length' ? state.unit : ''}
+              unitName={
+                item.kind === 'length' ? UNIT_NAMES[state.unit] : undefined
               }
-            />
-          </FieldRow>
-        ))}
+              error={errors[item.key]}
+              hint={item.hint}
+            >
+              <Input
+                {...field(item.key)}
+                aria-describedby={describedBy(
+                  `field-${item.key}`,
+                  errors[item.key],
+                  item.hint,
+                )}
+                inputMode={item.kind === 'count' ? 'numeric' : 'decimal'}
+                autoComplete="off"
+                value={state.dims[item.key]}
+                onFocus={() => onEdge(item.edge)}
+                onChange={event =>
+                  dispatch({
+                    type: 'dim',
+                    key: item.key,
+                    value: event.target.value,
+                  })
+                }
+              />
+            </FieldRow>
+          );
+        })}
         {shape.options.map(option => (
           <ToggleField
             key={option.key}
