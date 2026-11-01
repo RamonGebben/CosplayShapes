@@ -63,6 +63,92 @@ describe('buildPattern', () => {
     );
   });
 
+  it('rises an angled cylinder wrap from the short side to the tall side', () => {
+    const pattern = build(
+      'angled-cylinder',
+      input({ circumference: 380, short: 120, tall: 180 }),
+    );
+    const { width, height } = bounds(pattern.pieces[0].outline);
+    expect(width).toBeCloseTo(380, 6);
+    expect(height).toBeCloseTo(180, 6);
+    expect(edgeLength(pattern, 'short')).toBeCloseTo(120, 6);
+    expect(edgeLength(pattern, 'tall')).toBeCloseTo(180, 6);
+  });
+
+  it('cuts an angled cylinder top cap to fit the slanted edge', () => {
+    const pattern = build(
+      'angled-cylinder',
+      input(
+        { circumference: 380, short: 120, tall: 180 },
+        { options: { ends: true } },
+      ),
+    );
+    const cap = pattern.pieces.find(piece => piece.name === 'Top cap');
+    expect(cap).toBeDefined();
+    const capEdge = cap?.edges[0].points ?? [];
+    expect(pathLength(capEdge)).toBeCloseTo(edgeLength(pattern, 'top'), 1);
+  });
+
+  it('refuses an angled cylinder whose tall side is not taller', () => {
+    const result = buildPattern(
+      'angled-cylinder',
+      input({ circumference: 380, short: 150, tall: 150 }),
+    );
+    expect(result).toMatchObject({ ok: false, field: 'tall' });
+  });
+
+  it('cuts elbow sections whose joints match and whose sides follow the bend', () => {
+    const [circumference, bendRadius] = [250, 120];
+    const radius = circumference / (2 * Math.PI);
+    const pattern = build(
+      'elbow',
+      input({ circumference, bend: 90, radius: bendRadius, sections: 4 }),
+    );
+    const [end, middle] = pattern.pieces;
+    expect([end.cut, middle.cut]).toEqual([2, 2]);
+    const slant = Math.tan((30 * Math.PI) / 360);
+    const seam = end.edges.find(edge => edge.keys.includes('seam'));
+    expect(pathLength(seam?.points ?? [])).toBeCloseTo(
+      (bendRadius - radius) * slant,
+      6,
+    );
+    expect(bounds(end.outline).height).toBeCloseTo(
+      (bendRadius + radius) * slant,
+      6,
+    );
+    const joint = (piece: typeof end, index: number) =>
+      pathLength(
+        piece.edges.filter(edge => edge.keys.includes('joint'))[index].points,
+      );
+    expect(joint(end, 0)).toBeCloseTo(joint(middle, 0), 6);
+    expect(joint(middle, 0)).toBeCloseTo(joint(middle, 1), 6);
+  });
+
+  it('makes a two-section elbow from two end sections', () => {
+    const pattern = build(
+      'elbow',
+      input({ circumference: 250, bend: 45, radius: 120, sections: 2 }),
+    );
+    expect(pattern.pieces.map(piece => piece.cut)).toEqual([2]);
+  });
+
+  it('refuses an elbow that bends tighter than the tube', () => {
+    const result = buildPattern(
+      'elbow',
+      input({ circumference: 250, bend: 90, radius: 30, sections: 4 }),
+    );
+    expect(result).toMatchObject({ ok: false, field: 'radius' });
+  });
+
+  it('asks for more elbow sections when a joint would turn past 90°', () => {
+    const result = buildPattern(
+      'elbow',
+      input({ circumference: 250, bend: 180, radius: 120, sections: 2 }),
+    );
+    expect(result).toMatchObject({ ok: false, field: 'sections' });
+    if (!result.ok) expect(result.message).toContain('at least 3 sections');
+  });
+
   it('gives a cone wall an arc as long as the base circumference', () => {
     const pattern = build('cone', input({ circumference: 220, height: 150 }));
     expect(edgeLength(pattern, 'circumference')).toBeCloseTo(220, 0);
@@ -300,6 +386,61 @@ describe('buildPattern', () => {
     expect(width).toBeCloseTo(220, 6);
     expect(height).toBeCloseTo(70, 6);
     expect(pattern.pieces[0].stitch).toBe(true);
+  });
+});
+
+describe('solid models', () => {
+  type Vertex = readonly [number, number, number];
+  const mean = (points: Array<Vertex>) =>
+    [0, 1, 2].map(
+      axis =>
+        points.reduce((sum, point) => sum + point[axis], 0) / points.length,
+    );
+  /** Newell's normal: right for any flat polygon, however many corners. */
+  const normal = (points: Array<Vertex>) =>
+    points.reduce(
+      (sum, [x, y, z], index) => {
+        const [nx, ny, nz] = points[(index + 1) % points.length];
+        return [
+          sum[0] + (y - ny) * (z + nz),
+          sum[1] + (z - nz) * (x + nx),
+          sum[2] + (x - nx) * (y + ny),
+        ];
+      },
+      [0, 0, 0],
+    );
+
+  // Convex shapes only: the inside of an elbow's bend faces its middle.
+  it.each([
+    ['box', { width: 120, depth: 50, height: 90 }, { lid: true }],
+    ['pyramid', { width: 80, depth: 60, height: 110 }, { base: true }],
+    ['prism', { sides: 6, face: 40, length: 160 }, { ends: true }],
+    [
+      'tapered-prism',
+      { sides: 8, top: 32, bottom: 40, height: 180 },
+      { ends: true },
+    ],
+    ['angled-cylinder', { circumference: 380, short: 120, tall: 180 }, {}],
+    [
+      'angled-cylinder',
+      { circumference: 380, short: 120, tall: 180 },
+      { ends: true },
+    ],
+  ] as const)('winds every %s face outwards', (slug, dims, options) => {
+    const { model } = build(
+      slug,
+      input({ ...dims }, { options: { ...options } }),
+    );
+    if (model.kind !== 'solid') throw new Error('Expected a solid model');
+    const centre = mean(model.vertices);
+    model.faces.forEach(face => {
+      const points = face.map(index => model.vertices[index]);
+      const [nx, ny, nz] = normal(points);
+      const [cx, cy, cz] = mean(points);
+      const outwards =
+        nx * (cx - centre[0]) + ny * (cy - centre[1]) + nz * (cz - centre[2]);
+      expect(outwards).toBeGreaterThan(0);
+    });
   });
 });
 

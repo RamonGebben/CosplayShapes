@@ -10,6 +10,7 @@ import {
   sphere,
   truncatedCone,
 } from './round';
+import { angledCylinder, elbow } from './tube';
 import type { BuildInput, BuildResult } from './types';
 
 export type {
@@ -28,6 +29,8 @@ export { bounds, pieceSize } from './geometry';
 
 const BUILDERS: Record<ShapeSlug, (input: BuildInput) => BuildResult> = {
   cylinder,
+  'angled-cylinder': angledCylinder,
+  elbow,
   cone,
   'truncated-cone': truncatedCone,
   dome,

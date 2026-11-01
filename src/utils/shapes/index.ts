@@ -1,5 +1,7 @@
 export type ShapeSlug =
   | 'cylinder'
+  | 'angled-cylinder'
+  | 'elbow'
   | 'cone'
   | 'truncated-cone'
   | 'dome'
@@ -37,6 +39,10 @@ export interface CountField {
   max: number;
   edge: string;
   hint: string;
+  /** Shown after the input, for a count of something other than pieces. */
+  unit?: string;
+  /** Spoken unit name, when the visible one is a symbol. */
+  unitName?: string;
 }
 
 export type ShapeField = LengthField | CountField;
@@ -114,6 +120,90 @@ export const SHAPES: Array<Shape> = [
       },
     ],
     options: [endsOption('Adds a round cap for each end.')],
+  },
+  {
+    slug: 'angled-cylinder',
+    name: 'Angled cylinder',
+    family: 'round',
+    example: 'Boot top',
+    fields: [
+      {
+        kind: 'length',
+        key: 'circumference',
+        label: 'Circumference',
+        diameterLabel: 'Diameter',
+        example: 380,
+        edge: 'circumference',
+      },
+      {
+        kind: 'length',
+        key: 'short',
+        label: 'Short side',
+        example: 120,
+        edge: 'short',
+        hint: 'Height where the top is lowest. The seam goes here.',
+      },
+      {
+        kind: 'length',
+        key: 'tall',
+        label: 'Tall side',
+        example: 180,
+        edge: 'tall',
+        hint: 'Height straight across from the short side, where the top is highest.',
+      },
+    ],
+    options: [
+      endsOption(
+        'Adds a round cap for the bottom and an oval one for the top.',
+      ),
+    ],
+  },
+  {
+    slug: 'elbow',
+    name: 'Elbow',
+    family: 'round',
+    example: 'Steampunk pipe',
+    fields: [
+      {
+        kind: 'length',
+        key: 'circumference',
+        label: 'Circumference',
+        diameterLabel: 'Diameter',
+        example: 250,
+        edge: 'circumference',
+      },
+      {
+        kind: 'count',
+        key: 'bend',
+        label: 'Bend',
+        example: 90,
+        min: 10,
+        max: 180,
+        edge: 'bend',
+        hint: '90 for a right-angle elbow, 180 to turn right back.',
+        unit: '°',
+        unitName: 'degrees',
+      },
+      {
+        kind: 'length',
+        key: 'radius',
+        label: 'Bend radius',
+        example: 120,
+        edge: 'radius',
+        hint: 'From the point the tube bends around to the middle of the tube.',
+      },
+      {
+        kind: 'count',
+        key: 'sections',
+        label: 'Sections',
+        example: 4,
+        min: 2,
+        max: 12,
+        edge: 'joint',
+        hint: 'More sections make a smoother bend with more joints.',
+      },
+    ],
+    options: [],
   },
   {
     slug: 'cone',

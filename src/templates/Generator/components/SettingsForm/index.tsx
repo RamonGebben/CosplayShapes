@@ -86,9 +86,9 @@ export const SettingsForm = ({
               key={item.key}
               id={`field-${item.key}`}
               label={item.label}
-              unit={item.kind === 'length' ? state.unit : ''}
+              unit={item.kind === 'length' ? state.unit : (item.unit ?? '')}
               unitName={
-                item.kind === 'length' ? UNIT_NAMES[state.unit] : undefined
+                item.kind === 'length' ? UNIT_NAMES[state.unit] : item.unitName
               }
               error={errors[item.key]}
               hint={item.hint}

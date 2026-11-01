@@ -31,9 +31,9 @@ import type {
   Polyline,
 } from './types';
 
-const QUARTERS = [0.25, 0.5, 0.75];
+export const QUARTERS = [0.25, 0.5, 0.75];
 
-const isTabbed = (input: BuildInput) => input.material.join === 'tabbed';
+export const isTabbed = (input: BuildInput) => input.material.join === 'tabbed';
 
 /** A lathe meridian: the profile swept to one angle around the axis. */
 const meridian = (
@@ -49,7 +49,7 @@ const meridian = (
 });
 
 /** Round end caps. Foam caps sit inside the wall, so they keep the inside size. */
-const caps = (
+export const caps = (
   input: BuildInput,
   radii: Array<{ radius: number; key: string; name: string }>,
   firstIndex: number,
@@ -258,7 +258,7 @@ export const cone = (input: BuildInput): BuildResult => {
   };
 };
 
-const MIN_TAPER_MM = 1;
+export const MIN_TAPER_MM = 1;
 
 export const truncatedCone = (input: BuildInput): BuildResult => {
   const { top, bottom, height } = input.dims;

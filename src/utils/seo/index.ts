@@ -32,6 +32,18 @@ const SHAPE_SEO: Record<ShapeSlug, ShapeSeo> = {
     uses: 'arm bands, cuffs and tubes',
     keywords: ['cylinder template', 'tube pattern', 'arm band pattern'],
   },
+  'angled-cylinder': {
+    uses: 'boot tops and slanted cuffs',
+    keywords: [
+      'angled cylinder template',
+      'slanted tube pattern',
+      'boot cuff pattern',
+    ],
+  },
+  elbow: {
+    uses: 'bent pipes, hoses and elbow joints',
+    keywords: ['elbow pattern', 'pipe bend template', 'lobster back elbow'],
+  },
   cone: {
     uses: 'horns, spikes and hat tips',
     keywords: ['cone template', 'cone pattern generator', 'horn pattern'],
