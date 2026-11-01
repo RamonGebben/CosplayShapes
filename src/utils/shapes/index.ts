@@ -3,7 +3,10 @@ export type ShapeSlug =
   | 'cone'
   | 'truncated-cone'
   | 'dome'
+  | 'oval-dome'
+  | 'pointed-dome'
   | 'sphere'
+  | 'capsule'
   | 'box'
   | 'pyramid'
   | 'prism'
@@ -59,6 +62,26 @@ export interface Shape {
 }
 
 const SLOPE_HINT = 'Straight up from the base, not along the slope.';
+
+const goresField = (noun: string): CountField => ({
+  kind: 'count',
+  key: 'gores',
+  label: 'Gores',
+  example: 8,
+  min: 3,
+  max: 24,
+  edge: 'seam',
+  hint: `More gores make a rounder ${noun} with more seams.`,
+});
+
+const baseCircumference = (example: number): LengthField => ({
+  kind: 'length',
+  key: 'circumference',
+  label: 'Base circumference',
+  diameterLabel: 'Base diameter',
+  example,
+  edge: 'circumference',
+});
 
 const endsOption = (hint: string): ShapeOption => ({
   key: 'ends',
@@ -172,16 +195,45 @@ export const SHAPES: Array<Shape> = [
         edge: 'height',
         hint: 'From the rim straight up to the top, not over the curve.',
       },
+      goresField('dome'),
+    ],
+    options: [],
+  },
+  {
+    slug: 'oval-dome',
+    name: 'Oval dome',
+    family: 'round',
+    example: 'Shield boss',
+    fields: [
+      baseCircumference(450),
       {
-        kind: 'count',
-        key: 'gores',
-        label: 'Gores',
-        example: 8,
-        min: 3,
-        max: 24,
-        edge: 'seam',
-        hint: 'More gores make a rounder dome with more seams.',
+        kind: 'length',
+        key: 'height',
+        label: 'Height',
+        example: 45,
+        edge: 'height',
+        hint: 'From the rim straight up to the top. The sides always leave the rim straight up, so a low dome rolls over smoothly and a tall one is egg-shaped.',
       },
+      goresField('dome'),
+    ],
+    options: [],
+  },
+  {
+    slug: 'pointed-dome',
+    name: 'Pointed dome',
+    family: 'round',
+    example: 'Pointed helmet',
+    fields: [
+      baseCircumference(600),
+      {
+        kind: 'length',
+        key: 'height',
+        label: 'Height',
+        example: 160,
+        edge: 'height',
+        hint: 'From the rim straight up to the point: at least half the base diameter.',
+      },
+      goresField('dome'),
     ],
     options: [],
   },
@@ -199,16 +251,33 @@ export const SHAPES: Array<Shape> = [
         example: 400,
         edge: 'circumference',
       },
+      goresField('sphere'),
+    ],
+    options: [],
+  },
+  {
+    slug: 'capsule',
+    name: 'Capsule',
+    family: 'round',
+    example: 'Power cell',
+    fields: [
       {
-        kind: 'count',
-        key: 'gores',
-        label: 'Gores',
-        example: 8,
-        min: 3,
-        max: 24,
-        edge: 'seam',
-        hint: 'More gores make a rounder sphere with more seams.',
+        kind: 'length',
+        key: 'circumference',
+        label: 'Circumference',
+        diameterLabel: 'Diameter',
+        example: 200,
+        edge: 'circumference',
       },
+      {
+        kind: 'length',
+        key: 'length',
+        label: 'Length',
+        example: 160,
+        edge: 'length',
+        hint: 'End to end, including both rounded ends.',
+      },
+      goresField('capsule'),
     ],
     options: [],
   },

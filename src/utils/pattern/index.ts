@@ -1,6 +1,15 @@
 import { getShape, type ShapeSlug } from '~/utils/shapes';
 import { box, prism, pyramid, taperedPrism } from './flat';
-import { cone, cylinder, dome, sphere, truncatedCone } from './round';
+import {
+  capsule,
+  cone,
+  cylinder,
+  dome,
+  ovalDome,
+  pointedDome,
+  sphere,
+  truncatedCone,
+} from './round';
 import type { BuildInput, BuildResult } from './types';
 
 export type {
@@ -22,7 +31,10 @@ const BUILDERS: Record<ShapeSlug, (input: BuildInput) => BuildResult> = {
   cone,
   'truncated-cone': truncatedCone,
   dome,
+  'oval-dome': ovalDome,
+  'pointed-dome': pointedDome,
   sphere,
+  capsule,
   box,
   pyramid,
   prism,
@@ -31,6 +43,14 @@ const BUILDERS: Record<ShapeSlug, (input: BuildInput) => BuildResult> = {
 
 /** Five metres: past this a value is far more likely a unit slip than a prop. */
 export const MAX_LENGTH_MM = 5000;
+
+const GORED: Array<ShapeSlug> = [
+  'dome',
+  'oval-dome',
+  'pointed-dome',
+  'sphere',
+  'capsule',
+];
 
 const GORE_NOTE =
   'Gores join edge to edge. Line up the middle notches before gluing towards the tips.';
@@ -74,8 +94,7 @@ export const buildPattern = (
   if (error) return { ok: false, ...error };
   const result = BUILDERS[slug](input);
   if (!result.ok) return result;
-  const gored = slug === 'dome' || slug === 'sphere';
-  return gored
+  return GORED.includes(slug)
     ? {
         ok: true,
         pattern: {

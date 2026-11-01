@@ -110,6 +110,104 @@ describe('buildPattern', () => {
     expect(width * 6).toBeCloseTo(circumference, 6);
   });
 
+  it('makes an oval dome of a hemisphere when the height is the radius', () => {
+    const circumference = 600;
+    const radius = circumference / (2 * Math.PI);
+    const oval = build(
+      'oval-dome',
+      input({ circumference, height: radius, gores: 6 }),
+    );
+    const round = build(
+      'dome',
+      input({ circumference, height: radius, gores: 6 }),
+    );
+    expect(bounds(oval.pieces[0].outline).height).toBeCloseTo(
+      bounds(round.pieces[0].outline).height,
+      6,
+    );
+    expect(bounds(oval.pieces[0].outline).width).toBeCloseTo(
+      bounds(round.pieces[0].outline).width,
+      6,
+    );
+  });
+
+  it('runs an oval dome gore as long as the quarter ellipse', () => {
+    const [across, up] = [100, 40];
+    const pattern = build(
+      'oval-dome',
+      input({ circumference: 2 * Math.PI * across, height: up, gores: 8 }),
+    );
+    // Ramanujan's perimeter, a quarter of it, is good to well under 0.01 mm here.
+    const h = ((across - up) / (across + up)) ** 2;
+    const quarter =
+      (Math.PI * (across + up) * (1 + (3 * h) / (10 + Math.sqrt(4 - 3 * h)))) /
+      4;
+    const { width, height } = bounds(pattern.pieces[0].outline);
+    expect(height).toBeCloseTo(quarter, 2);
+    expect(width * 8).toBeCloseTo(2 * Math.PI * across, 6);
+  });
+
+  it('closes a pointed dome gore in a point and opens it to the base', () => {
+    const circumference = 600;
+    const pattern = build(
+      'pointed-dome',
+      input({ circumference, height: 160, gores: 8 }),
+    );
+    const [tip] = pattern.pieces[0].edges[0].points;
+    const top = bounds(pattern.pieces[0].outline);
+    expect(tip[1]).toBeCloseTo(top.minY, 6);
+    expect(top.width * 8).toBeCloseTo(circumference, 6);
+  });
+
+  it('carries a foam pointed dome tip on to the axis', () => {
+    const pattern = build(
+      'pointed-dome',
+      input({ circumference: 600, height: 160, gores: 8 }, { thicknessMm: 6 }),
+    );
+    const outline = pattern.pieces[0].outline;
+    const tips = outline.filter(([x]) => {
+      const { minX, width } = bounds(outline);
+      return Math.abs(x - (minX + width / 2)) < 1e-9;
+    });
+    expect(tips).toHaveLength(1);
+  });
+
+  it('refuses a pointed dome lower than half its width', () => {
+    const result = buildPattern(
+      'pointed-dome',
+      input({ circumference: 600, height: 60, gores: 8 }),
+    );
+    expect(result).toMatchObject({ ok: false, field: 'height' });
+  });
+
+  it('makes capsule gores as long as the straight middle and two half circles', () => {
+    const circumference = 200;
+    const radius = circumference / (2 * Math.PI);
+    const pattern = build(
+      'capsule',
+      input({ circumference, length: 160, gores: 6 }),
+    );
+    expect(bounds(pattern.pieces[0].outline).height).toBeCloseTo(
+      160 - 2 * radius + Math.PI * radius,
+      6,
+    );
+    const rings = pattern.pieces[0].edges.filter(edge =>
+      edge.keys.includes('circumference'),
+    );
+    expect(rings.map(edge => pathLength(edge.points) * 6)).toEqual([
+      expect.closeTo(circumference, 6),
+      expect.closeTo(circumference, 6),
+    ]);
+  });
+
+  it('refuses a capsule no longer than it is wide', () => {
+    const result = buildPattern(
+      'capsule',
+      input({ circumference: 200, length: 60, gores: 6 }),
+    );
+    expect(result).toMatchObject({ ok: false, field: 'length' });
+  });
+
   it('cuts a foam box as separate faces and a card box as one tabbed net', () => {
     const dims = { width: 120, depth: 50, height: 90 };
     const foam = build('box', input(dims, { options: { lid: true } }));

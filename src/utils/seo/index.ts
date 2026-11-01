@@ -49,9 +49,25 @@ const SHAPE_SEO: Record<ShapeSlug, ShapeSeo> = {
     uses: 'helmet crowns and pauldrons',
     keywords: ['dome pattern', 'gore pattern', 'helmet dome template'],
   },
+  'oval-dome': {
+    uses: 'shield bosses and egg-shaped helmets',
+    keywords: ['oval dome pattern', 'shield boss template', 'ellipsoid gores'],
+  },
+  'pointed-dome': {
+    uses: 'pointed helmets and spires',
+    keywords: [
+      'pointed dome pattern',
+      'pointed helmet template',
+      'ogive gore pattern',
+    ],
+  },
   sphere: {
     uses: 'orbs and balls',
     keywords: ['sphere pattern', 'sphere gore template', 'orb pattern'],
+  },
+  capsule: {
+    uses: 'vials, power cells and canisters',
+    keywords: ['capsule pattern', 'pill shape template', 'power cell pattern'],
   },
   box: {
     uses: 'pouches, plates and props',
