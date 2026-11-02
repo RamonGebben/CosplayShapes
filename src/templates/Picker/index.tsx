@@ -3,6 +3,7 @@ import type { Layout } from '~/utils/layout';
 import type { ModelSpec } from '~/utils/pattern';
 import { TIERS, type ShapeSlug } from '~/utils/shapes';
 import { Category } from './components/Category';
+import { Credits } from './components/Credits';
 import { Facts } from './components/Facts';
 import { Field } from './components/Field';
 import { Frame } from './components/Frame';
@@ -40,6 +41,32 @@ export const Picker = ({ previews }: { previews: Array<ShapePreview> }) => (
         <li>Allows for foam thickness and seam allowance</li>
         <li>Free, with nothing to sign up for</li>
       </Facts>
+      <Credits>
+        <p>
+          Made with{' '}
+          <span role="img" aria-label="love">
+            ❤️
+          </span>{' '}
+          by{' '}
+          <a
+            href="https://www.instagram.com/kernel.cosplay/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @kernel.cosplay
+          </a>
+        </p>
+        <p>
+          <a
+            href="https://www.patreon.com/cw/KernelsSoftwareEmporium"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Support this and other projects
+          </a>{' '}
+          on Patreon
+        </p>
+      </Credits>
     </Intro>
     <Groups aria-label="Shapes">
       {TIERS.map(tier => (
