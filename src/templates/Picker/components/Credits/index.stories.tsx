@@ -4,6 +4,7 @@ import { Credits } from '.';
 const meta = {
   component: Credits,
   args: {
+    $placement: 'intro',
     children: (
       <p>
         Made with ❤️ by <a href="#">@kernel.cosplay</a>
@@ -17,3 +18,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+
+export const Footer: Story = {
+  args: { $placement: 'footer' },
+  globals: { viewport: { value: 'mobile1' } },
+};

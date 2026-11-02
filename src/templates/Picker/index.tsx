@@ -21,6 +21,36 @@ export interface ShapePreview {
   model: ModelSpec;
 }
 
+/** The maker's credit and Patreon link, shown in the intro or at the foot of the page. */
+const credit = (
+  <>
+    <p>
+      Made with{' '}
+      <span role="img" aria-label="love">
+        ❤️
+      </span>{' '}
+      by{' '}
+      <a
+        href="https://www.instagram.com/kernel.cosplay/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        @kernel.cosplay
+      </a>
+    </p>
+    <p>
+      <a
+        href="https://www.patreon.com/cw/KernelsSoftwareEmporium"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Support this and other projects
+      </a>{' '}
+      on Patreon
+    </p>
+  </>
+);
+
 /** The shape picker: every shape with the flat pattern it becomes. */
 export const Picker = ({ previews }: { previews: Array<ShapePreview> }) => (
   <Frame>
@@ -41,32 +71,7 @@ export const Picker = ({ previews }: { previews: Array<ShapePreview> }) => (
         <li>Allows for foam thickness and seam allowance</li>
         <li>Free, with nothing to sign up for</li>
       </Facts>
-      <Credits>
-        <p>
-          Made with{' '}
-          <span role="img" aria-label="love">
-            ❤️
-          </span>{' '}
-          by{' '}
-          <a
-            href="https://www.instagram.com/kernel.cosplay/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            @kernel.cosplay
-          </a>
-        </p>
-        <p>
-          <a
-            href="https://www.patreon.com/cw/KernelsSoftwareEmporium"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Support this and other projects
-          </a>{' '}
-          on Patreon
-        </p>
-      </Credits>
+      <Credits $placement="intro">{credit}</Credits>
     </Intro>
     <Groups aria-label="Shapes">
       {TIERS.map(tier => (
@@ -106,5 +111,6 @@ export const Picker = ({ previews }: { previews: Array<ShapePreview> }) => (
         </section>
       ))}
     </Groups>
+    <Credits $placement="footer">{credit}</Credits>
   </Frame>
 );
