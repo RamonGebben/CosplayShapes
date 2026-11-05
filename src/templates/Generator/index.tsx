@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ShapeRail } from '~/organisms/ShapeRail';
 import { downloadBlob, patternFileName } from '~/utils/download';
 import { getMaterial } from '~/utils/materials';
+import { SITE, shapePath } from '~/utils/seo';
 import { exportSummary, formatFact, materialLabel } from '~/utils/patternText';
 import { getShape, type ShapeSlug } from '~/utils/shapes';
 import { patternSvg } from '~/utils/svgExport';
@@ -42,6 +43,8 @@ export const Generator = ({ slug }: { slug: ShapeSlug }) => {
           title: `${shape.name} pattern`,
           materialLabel: label,
           unit: state.unit,
+          link: `${SITE.url}${shapePath(slug)}`,
+          notes: pattern.notes,
         },
         headingFont,
       );

@@ -2,10 +2,18 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { PDFDict, PDFDocument, PDFName } from 'pdf-lib';
 import { describe, expect, it } from 'vitest';
+import { spotFinder } from '~/utils/labelSpot';
 import { PAPERS, layoutPattern } from '~/utils/layout';
 import { getMaterial } from '~/utils/materials';
 import { buildPattern } from '~/utils/pattern';
-import { labelPosition, patternPdf } from '.';
+import {
+  entryHeight,
+  fitLabel,
+  flowList,
+  labelPosition,
+  pageRanges,
+  patternPdf,
+} from '.';
 
 const layoutFor = (circumference: number) => {
   const result = buildPattern('cylinder', {
@@ -26,6 +34,7 @@ describe('patternPdf', () => {
       title: 'Cylinder',
       materialLabel: 'EVA 6 mm',
       unit: 'cm',
+      link: 'https://cosplayshapes.ra-ge.net/cylinder',
     });
     const doc = await PDFDocument.load(bytes);
     expect(doc.getPageCount()).toBe(layout.tiles.length + 1);
@@ -41,7 +50,12 @@ describe('patternPdf', () => {
     const bytes = await patternPdf(
       layoutFor(300),
       PAPERS.a4,
-      { title: 'Cylinder', materialLabel: 'EVA 6 mm', unit: 'cm' },
+      {
+        title: 'Cylinder',
+        materialLabel: 'EVA 6 mm',
+        unit: 'cm',
+        link: 'https://cosplayshapes.ra-ge.net/cylinder',
+      },
       font,
     );
     const doc = await PDFDocument.load(bytes);
@@ -89,5 +103,75 @@ describe('labelPosition', () => {
       area,
     });
     expect(position.x).toBe(12 + 10 + 1);
+  });
+});
+
+describe('fitLabel', () => {
+  const square = (side: number) =>
+    [
+      [0, 0],
+      [side, 0],
+      [side, side],
+      [0, side],
+    ] as const;
+
+  it('sets the label across a piece with room for it, in the middle', () => {
+    const spot = fitLabel(spotFinder([...square(100)]), 30);
+    expect(spot?.placement).toBe('across');
+    expect(spot?.x).toBeCloseTo(50, 0);
+  });
+
+  it('turns the label along a strip too narrow to hold it across', () => {
+    const strip = [
+      [0, 0],
+      [16, 0],
+      [16, 200],
+      [0, 200],
+    ] as const;
+    expect(fitLabel(spotFinder([...strip]), 40)?.placement).toBe('along');
+  });
+
+  it('gives up on a piece too small for the label either way', () => {
+    expect(fitLabel(spotFinder([...square(8)]), 40)).toBeUndefined();
+  });
+});
+
+describe('pageRanges', () => {
+  const tile = (column: number, row: number) => ({
+    column,
+    row,
+    name: `${'AB'[column]}${row + 1}`,
+  });
+
+  it('runs three or more pages down a column together', () => {
+    expect(
+      pageRanges([tile(0, 0), tile(1, 0), tile(0, 1), tile(0, 2), tile(1, 1)]),
+    ).toBe('A1\u2013A3, B1, B2');
+  });
+});
+
+describe('flowList', () => {
+  const one = entryHeight(1);
+
+  it('spreads entries evenly down and across the columns', () => {
+    expect(flowList(Array(6).fill(one), 2, 200)).toEqual([
+      { column: 0, top: 0 },
+      { column: 0, top: one },
+      { column: 0, top: one * 2 },
+      { column: 1, top: 0 },
+      { column: 1, top: one },
+      { column: 1, top: one * 2 },
+    ]);
+  });
+
+  it('never squeezes entries closer than their height', () => {
+    const spots = flowList(Array(20).fill(one), 2, one * 4);
+    expect(spots).toHaveLength(8);
+    expect(spots.every(({ top }) => top % one === 0)).toBe(true);
+  });
+
+  it('starts a new column when a tall entry would run past the foot', () => {
+    const spots = flowList([one, entryHeight(4)], 2, one * 2);
+    expect(spots[1]).toEqual({ column: 1, top: 0 });
   });
 });
