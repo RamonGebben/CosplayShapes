@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { useId, useRef, useState, type ReactNode } from 'react';
+import { useOutsidePointerDown } from '~/hooks/useOutsidePointerDown';
 import { Panel } from './components/Panel';
 import { Trigger } from './components/Trigger';
 import { Wrapper } from './components/Wrapper';
@@ -23,14 +24,7 @@ export const Toggletip = ({ label, lead, children }: ToggletipProps) => {
   const [hovered, setHovered] = useState(false);
   const open = pinned || hovered;
 
-  useEffect(() => {
-    if (!pinned) return;
-    const onPointerDown = (event: PointerEvent) => {
-      if (!wrapper.current?.contains(event.target as Node)) setPinned(false);
-    };
-    document.addEventListener('pointerdown', onPointerDown);
-    return () => document.removeEventListener('pointerdown', onPointerDown);
-  }, [pinned]);
+  useOutsidePointerDown(wrapper, pinned, () => setPinned(false));
 
   const close = () => {
     setPinned(false);

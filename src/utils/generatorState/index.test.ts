@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { generatorReducer, initialState, toBuildInput } from '.';
+import {
+  generatorReducer,
+  initialState,
+  parsePreferences,
+  toBuildInput,
+} from '.';
 
 describe('generatorReducer', () => {
   it('starts from the shape’s example measurements in cm', () => {
@@ -135,5 +140,35 @@ describe('toBuildInput', () => {
       value: false,
     });
     expect(toBuildInput(state).input.thicknessMm).toBe(0);
+  });
+});
+
+describe('parsePreferences', () => {
+  it('keeps a known unit, material and paper', () => {
+    expect(
+      parsePreferences({ unit: 'in', material: 'fabric', paper: 'letter' }),
+    ).toEqual({ unit: 'in', material: 'fabric', paper: 'letter' });
+  });
+
+  it('leaves out anything stale or unknown', () => {
+    expect(
+      parsePreferences({ unit: 'furlong', material: 7, paper: undefined }),
+    ).toEqual({ unit: undefined, material: undefined, paper: undefined });
+  });
+});
+
+describe('preferences', () => {
+  it('starts over from the example in the remembered preferences', () => {
+    const edited = generatorReducer(initialState('cone'), {
+      type: 'dim',
+      key: 'height',
+      value: '99',
+    });
+    expect(
+      generatorReducer(edited, {
+        type: 'preferences',
+        preferences: { unit: 'in' },
+      }),
+    ).toEqual(initialState('cone', { unit: 'in' }));
   });
 });

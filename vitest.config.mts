@@ -32,7 +32,12 @@ export default defineConfig({
           browser: {
             enabled: true,
             headless: true,
-            provider: playwright({}),
+            // Headless Chromium draws WebGL in software, where every model
+            // takes seconds and times stories out; without it they show their
+            // no-WebGL fallback.
+            provider: playwright({
+              launchOptions: { args: ['--disable-webgl', '--disable-3d-apis'] },
+            }),
             instances: [{ browser: 'chromium' }],
           },
         },

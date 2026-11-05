@@ -20,15 +20,8 @@ export const Actions = styled.div`
     border-top: ${theme.borderWidth('base')} solid ${theme.color('quaternary')};
     background: ${theme.color('background', 'emphasis')};
 
-    & > button {
+    & > :last-child {
       flex: 1;
-    }
-  `}
-
-  /* A phone has no room for the "true scale" tag beside the paper size. */
-  ${({ theme }) => theme.mq.lessThan('mobile')`
-    & > button span {
-      display: none;
     }
   `}
 `;

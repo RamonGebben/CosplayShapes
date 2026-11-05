@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { PDFDict, PDFDocument, PDFName } from 'pdf-lib';
+import { PDFDict, PDFDocument, PDFName, PDFString } from 'pdf-lib';
 import { describe, expect, it } from 'vitest';
 import { spotFinder } from '~/utils/labelSpot';
 import { PAPERS, layoutPattern } from '~/utils/layout';
@@ -13,6 +13,7 @@ import {
   labelPosition,
   pageRanges,
   patternPdf,
+  type PdfMeta,
 } from '.';
 
 const layoutFor = (circumference: number) => {
@@ -27,15 +28,32 @@ const layoutFor = (circumference: number) => {
   return layoutPattern(result.pattern.pieces, PAPERS.a4);
 };
 
+const SHARE =
+  'https://cosplayshapes.ra-ge.net/cylinder?v=1&unit=cm&circumference=90.0&height=10.0';
+
+const META: PdfMeta = {
+  title: 'Cylinder',
+  materialLabel: 'EVA 6 mm',
+  unit: 'cm',
+  link: 'https://cosplayshapes.ra-ge.net/cylinder',
+  share: SHARE,
+};
+
+/** Every link annotation's target, page by page. */
+const linkTargets = (doc: PDFDocument) =>
+  doc.getPages().map(page =>
+    page.node
+      .Annots()
+      ?.asArray()
+      .map(ref => doc.context.lookup(ref, PDFDict))
+      .map(annot => annot.lookup(PDFName.of('A'), PDFDict))
+      .map(action => action.lookup(PDFName.of('URI'), PDFString).decodeText()),
+  );
+
 describe('patternPdf', () => {
   it('writes a guide page plus one page per tile, at the paper’s true size', async () => {
     const layout = layoutFor(900);
-    const bytes = await patternPdf(layout, PAPERS.a4, {
-      title: 'Cylinder',
-      materialLabel: 'EVA 6 mm',
-      unit: 'cm',
-      link: 'https://cosplayshapes.ra-ge.net/cylinder',
-    });
+    const bytes = await patternPdf(layout, PAPERS.a4, META);
     const doc = await PDFDocument.load(bytes);
     expect(doc.getPageCount()).toBe(layout.tiles.length + 1);
     const { width, height } = doc.getPage(0).getSize();
@@ -43,21 +61,19 @@ describe('patternPdf', () => {
     expect(height).toBeCloseTo((297 * 72) / 25.4, 2);
   });
 
+  it('links every page to the exact pattern, QR code included', async () => {
+    const bytes = await patternPdf(layoutFor(900), PAPERS.a4, META);
+    const [guide, ...tiles] = linkTargets(await PDFDocument.load(bytes));
+    // The QR code and the footer link.
+    expect(guide).toEqual([SHARE, SHARE]);
+    tiles.forEach(targets => expect(targets).toEqual([SHARE]));
+  });
+
   it('embeds Big Shoulders for the headings when its bytes are passed', async () => {
     const font = await readFile(
       path.join(process.cwd(), 'public/fonts/BigShoulders-Black.ttf'),
     );
-    const bytes = await patternPdf(
-      layoutFor(300),
-      PAPERS.a4,
-      {
-        title: 'Cylinder',
-        materialLabel: 'EVA 6 mm',
-        unit: 'cm',
-        link: 'https://cosplayshapes.ra-ge.net/cylinder',
-      },
-      font,
-    );
+    const bytes = await patternPdf(layoutFor(300), PAPERS.a4, META, font);
     const doc = await PDFDocument.load(bytes);
     const fontNames = doc.context
       .enumerateIndirectObjects()

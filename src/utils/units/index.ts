@@ -1,4 +1,6 @@
-export type Unit = 'cm' | 'in';
+export const UNITS = ['cm', 'in'] as const;
+
+export type Unit = (typeof UNITS)[number];
 
 const MM_PER: Record<Unit, number> = { cm: 10, in: 25.4 };
 

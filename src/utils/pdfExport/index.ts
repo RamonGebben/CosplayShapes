@@ -19,6 +19,7 @@ import {
   type PDFFont,
   type PDFPage,
 } from 'pdf-lib';
+import { encode } from 'uqr';
 import {
   clipToRect,
   spotFinder,
@@ -53,8 +54,10 @@ export interface PdfMeta {
   materialLabel: string;
   /** The calibration square's side and its printed caption, per unit. */
   unit: 'cm' | 'in';
-  /** Where the pattern can be made again, printed on every page. */
+  /** The shape's page, printed short on every page. */
   link: string;
+  /** This exact pattern, settings and all: what the QR code and links open. */
+  share: string;
   /** Shape-specific assembly advice for the guide page. */
   notes?: Array<string>;
 }
@@ -80,6 +83,10 @@ const strokePath = (
     borderWidth: (options.width ?? 0.3) / PT,
     borderDashArray: options.dash?.map(value => value / PT),
   });
+
+/** Fills an SVG path given in page millimetres, y down from the top edge. */
+const fillPath = (page: PDFPage, d: string) =>
+  page.drawSvgPath(d, { x: 0, y: page.getHeight(), scale: PT, color: INK });
 
 interface TextOptions {
   size?: number;
@@ -165,11 +172,15 @@ const linkArea = (page: PDFPage, url: string, area: Rect) => {
 /** The link as printed: no scheme, it reads cleaner and types the same. */
 const shortLink = (url: string) => url.replace(/^https?:\/\//, '');
 
-/** A printed link that also opens when the PDF is read on screen. */
+/**
+ * A printed link that also opens when the PDF is read on screen, to `href`:
+ * the full address, too long to print.
+ */
 const linkText = (
   page: PDFPage,
   font: PDFFont,
   url: string,
+  href: string,
   x: number,
   y: number,
   options: TextOptions = {},
@@ -182,12 +193,39 @@ const linkText = (
       : options.align === 'centre'
         ? x - width / 2
         : x;
-  linkArea(page, url, {
+  linkArea(page, href, {
     x: start,
     y: y - size / PT / 2 - 0.5,
     width,
     height: size / PT + 1,
   });
+};
+
+/** Wide enough for a phone to read a long link from arm's length. */
+const QR_SIDE = 30;
+
+/**
+ * A QR code with its top-left corner at x, y in page millimetres, its dark
+ * cells filled as one path so neighbours meet without seams. Each row's run
+ * of dark cells is one rectangle, which keeps the path short. Leaves the
+ * quiet zone to the caller.
+ */
+const qrCode = (page: PDFPage, value: string, x: number, y: number) => {
+  const { data, size } = encode(value, { ecc: 'M', border: 0 });
+  const cell = QR_SIDE / size;
+  const d = data
+    .flatMap((row, rowIndex) =>
+      row.flatMap((dark, column) => {
+        if (!dark || row[column - 1]) return [];
+        const run = row.slice(column).findIndex(next => !next);
+        const length = run === -1 ? size - column : run;
+        return [
+          frame(x + column * cell, y + rowIndex * cell, length * cell, cell),
+        ];
+      }),
+    )
+    .join(' ');
+  fillPath(page, d);
 };
 
 /** "COSPLAYSHAPES", the second word in the brand's yellow, as on the site. */
@@ -637,7 +675,7 @@ const guideFooter = (
   text(page, fonts.bold, 'CosplayShapes', left + generated, foot, {
     size: 9,
   });
-  linkText(page, fonts.regular, meta.link, right, foot, {
+  linkText(page, fonts.regular, meta.link, meta.share, right, foot, {
     size: 9,
     align: 'right',
   });
@@ -694,6 +732,25 @@ const guidePage = (
   const side = meta.unit === 'cm' ? 50 : 50.8;
   strokePath(page, frame(left, 50, side, side), { width: 0.4 });
   const captionX = left + side + 8;
+  // The way back to this exact pattern, at the page's top right.
+  const qrX = right - QR_SIDE;
+  qrCode(page, meta.share, qrX, 50);
+  linkArea(page, meta.share, {
+    x: qrX,
+    y: 50,
+    width: QR_SIDE,
+    height: QR_SIDE,
+  });
+  wrap(
+    fonts.regular,
+    'Scan to open this pattern and adjust it.',
+    8,
+    QR_SIDE,
+  ).forEach((line, index) =>
+    text(page, fonts.regular, line, qrX, 50 + QR_SIDE + 4 + index * 3.6, {
+      size: 8,
+    }),
+  );
   text(
     page,
     fonts.bold,
@@ -706,7 +763,7 @@ const guidePage = (
     fonts.regular,
     'Measure it before you cut. If it is off, the printer scaled the page.',
     10,
-    right - captionX,
+    qrX - 8 - captionX,
   ).forEach((line, index) =>
     text(page, fonts.regular, line, captionX, 70 + index * 5, { size: 10 }),
   );
@@ -855,7 +912,7 @@ const tilePage = (
     text(page, font, `Joins ${neighbours.join(', ')}`, m + inset, foot, {
       size: 9,
     });
-  linkText(page, font, meta.link, m + w / 2, foot, {
+  linkText(page, font, meta.link, meta.share, m + w / 2, foot, {
     size: 7.5,
     align: 'centre',
     color: FAINT,

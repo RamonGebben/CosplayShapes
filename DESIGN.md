@@ -247,6 +247,7 @@ Heavy, square and inky.
 - **Secondary:** white fill with ink text. Hover fills yellow.
 - **Transitions:** background and colour, 150ms ease-out, hover only on fine pointers.
 - **Disabled / busy:** 60% opacity with a progress cursor.
+- **Split button:** the export action. Download PDF stays one click as the primary; a square ink caret beside it, split off by a 1.5px paper-white rule, opens a menu upwards with the other exports (SVG for cutter, Copy link). The open caret fills ultramarine and its chevron points the way the menu opens. The menu is white, ruled in 1.5px ink with 1px rule-grey dividers, no shadow; each entry is a bold label over a small muted line saying what it gives, filling yellow on hover. It follows the ARIA menu button pattern: arrows move, Escape or Tab closes, focus returns to the caret.
 
 ### Segmented Control
 

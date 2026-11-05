@@ -10,7 +10,9 @@ const meta = {
     onPaper: () => undefined,
     onPdf: () => undefined,
     onSvg: () => undefined,
+    onShare: () => undefined,
     status: 'idle',
+    making: false,
     disabled: false,
   },
 } satisfies Meta<typeof ExportBar>;
@@ -21,6 +23,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const Working: Story = { args: { status: 'working' } };
+export const Working: Story = { args: { making: true } };
 
 export const Failed: Story = { args: { status: 'failed' } };
+
+export const Copied: Story = { args: { status: 'copied' } };

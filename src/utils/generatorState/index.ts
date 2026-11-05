@@ -1,5 +1,6 @@
-import type { PaperId } from '~/utils/layout';
+import { PAPERS, type PaperId } from '~/utils/layout';
 import {
+  MATERIALS,
   SEAM_RANGE_MM,
   THICKNESS_RANGE_MM,
   getMaterial,
@@ -19,6 +20,7 @@ import {
   parseInput,
   roundTo,
   toInputValue,
+  UNITS,
   type Unit,
 } from '~/utils/units';
 
@@ -52,7 +54,9 @@ export type GeneratorAction =
   | { type: 'compensate'; value: boolean }
   | { type: 'seam'; value: boolean }
   | { type: 'seamAmount'; value: string }
-  | { type: 'paper'; paper: PaperId };
+  | { type: 'paper'; paper: PaperId }
+  /** Starts over from the example, in the maker's remembered preferences. */
+  | { type: 'preferences'; preferences: Partial<Preferences> };
 
 const DEFAULT_SEAM_MM = 10;
 
@@ -94,15 +98,42 @@ const typedLength = (state: GeneratorState, key: string) => {
   return isMeasuredAcross(state, key) ? mm * Math.PI : mm;
 };
 
+export type Preferences = Pick<GeneratorState, 'unit' | 'material' | 'paper'>;
+
+/** The settings a maker brings from shape to shape, before they change any. */
+export const DEFAULT_PREFERENCES: Preferences = {
+  unit: 'cm',
+  material: 'eva',
+  paper: 'a4',
+};
+
+const oneOf = <T extends string>(values: ReadonlyArray<T>, value: unknown) =>
+  values.find(item => item === value);
+
+/**
+ * The preferences worth keeping from text that may be stale or hand-edited:
+ * an unknown unit, material or paper is left out.
+ */
+export const parsePreferences = (
+  raw: Partial<Record<keyof Preferences, unknown>>,
+): Partial<Preferences> => ({
+  unit: oneOf(UNITS, raw.unit),
+  material: oneOf(
+    MATERIALS.map(material => material.id),
+    raw.material,
+  ),
+  paper: oneOf(Object.keys(PAPERS) as Array<PaperId>, raw.paper),
+});
+
 export const initialState = (
   slug: ShapeSlug,
-  preferences: Partial<
-    Pick<GeneratorState, 'unit' | 'material' | 'paper'>
-  > = {},
+  preferences: Partial<Preferences> = {},
 ): GeneratorState => {
   const shape = getShape(slug);
-  const unit = preferences.unit ?? 'cm';
-  const material = getMaterial(preferences.material ?? 'eva');
+  const unit = preferences.unit ?? DEFAULT_PREFERENCES.unit;
+  const material = getMaterial(
+    preferences.material ?? DEFAULT_PREFERENCES.material,
+  );
   const examples = getExampleDims(shape);
   return {
     slug,
@@ -134,7 +165,7 @@ export const initialState = (
     compensate: material.compensate,
     seam: material.seam,
     seamAmount: toInputValue(material.seamMm || DEFAULT_SEAM_MM, unit),
-    paper: preferences.paper ?? 'a4',
+    paper: preferences.paper ?? DEFAULT_PREFERENCES.paper,
   };
 };
 
@@ -155,6 +186,8 @@ export const generatorReducer = (
   action: GeneratorAction,
 ): GeneratorState => {
   switch (action.type) {
+    case 'preferences':
+      return initialState(state.slug, action.preferences);
     case 'unit':
       if (action.unit === state.unit) return state;
       return {
