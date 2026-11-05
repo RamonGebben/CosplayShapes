@@ -49,6 +49,10 @@ const FAINT = rgb(0.55, 0.55, 0.58);
 /** The brand's yellow, deepened so it holds up on white paper. */
 const BRAND = rgb(0.79, 0.6, 0.05);
 
+/** Cut and notch line weights in mm; notches heavier so they read at a glance. */
+const CUT_LINE_MM = 0.8;
+const NOTCH_LINE_MM = 1.5;
+
 export interface PdfMeta {
   title: string;
   materialLabel: string;
@@ -833,9 +837,11 @@ const tilePage = (
   here.forEach(({ piece, x, y }) => {
     const ox = x + dx;
     const oy = y + dy;
-    strokePath(page, toPath(piece.cutLine, true, ox, oy), { width: 0.35 });
+    strokePath(page, toPath(piece.cutLine, true, ox, oy), {
+      width: CUT_LINE_MM,
+    });
     piece.notches.forEach(mark =>
-      strokePath(page, toPath(mark, false, ox, oy), { width: 0.35 }),
+      strokePath(page, toPath(mark, false, ox, oy), { width: NOTCH_LINE_MM }),
     );
     if (piece.stitch)
       strokePath(page, toPath(piece.outline, true, ox, oy), {

@@ -22,6 +22,14 @@ export interface PieceShapeProps {
   others?: Array<{ minX: number; minY: number; width: number; height: number }>;
 }
 
+/**
+ * Line weights in CSS pixels: the cut line holds its own against the grid,
+ * notches outweigh it so they read at a glance, and a lit edge outweighs both.
+ */
+const CUT_LINE_PX = 1;
+const NOTCH_LINE_PX = 2;
+const LIT_LINE_PX = 3;
+
 /** One piece: its paper, or its cut line, guides, notches, lit edges and label. */
 export const PieceShape = ({
   piece,
@@ -78,7 +86,7 @@ export const PieceShape = ({
     <g transform={translate}>
       <path
         d={toPath(piece.cutLine, true)}
-        style={{ ...stroke, stroke: ink }}
+        style={{ ...stroke, strokeWidth: CUT_LINE_PX, stroke: ink }}
       />
       {piece.stitch && (
         <path
@@ -99,7 +107,7 @@ export const PieceShape = ({
         <path
           key={`notch-${index}`}
           d={toPath(mark)}
-          style={{ ...stroke, stroke: ink }}
+          style={{ ...stroke, strokeWidth: NOTCH_LINE_PX, stroke: ink }}
         />
       ))}
       {lit.map((edge, index) => (
@@ -109,7 +117,7 @@ export const PieceShape = ({
           strokeLinecap="round"
           style={{
             ...stroke,
-            strokeWidth: line * 3,
+            strokeWidth: LIT_LINE_PX,
             stroke: theme.color('secondary'),
           }}
         />

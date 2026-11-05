@@ -51,7 +51,7 @@ export const patternSvg = (layout: Layout, materialLabel: string) => {
       `<g id="piece-${piece.id}">`,
       `<path class="cut" d="${toPath(piece.cutLine, true, x, y)}"/>`,
       ...piece.notches.map(
-        mark => `<path class="cut" d="${toPath(mark, false, x, y)}"/>`,
+        mark => `<path class="notch" d="${toPath(mark, false, x, y)}"/>`,
       ),
       ...guides.map(d => `<path class="score" d="${d}"/>`),
       `<text x="${round(x + lx)}" y="${round(y + ly)}" text-anchor="middle">${escapeXml(label.title)}</text>`,
@@ -63,7 +63,8 @@ export const patternSvg = (layout: Layout, materialLabel: string) => {
     '<?xml version="1.0" encoding="UTF-8"?>',
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}mm" height="${height}mm" viewBox="0 0 ${width} ${height}">`,
     '<style>',
-    '.cut{fill:none;stroke:#000;stroke-width:0.25}',
+    '.cut{fill:none;stroke:#000;stroke-width:0.5}',
+    '.notch{fill:none;stroke:#000;stroke-width:1}',
     `.score{fill:none;stroke:${SCORE_COLOR};stroke-width:0.25;stroke-dasharray:2 1.5}`,
     'text{font:3.5px sans-serif;fill:#000}',
     '</style>',

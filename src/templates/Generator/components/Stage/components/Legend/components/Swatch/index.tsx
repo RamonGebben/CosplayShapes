@@ -20,7 +20,7 @@ export const Swatch = styled.i<{ $kind: Kind }>`
         `;
       case 'notch':
         return css`
-          width: 1px;
+          width: 2px;
           height: 10px;
           border: 0;
           background: ${theme.color('quaternary')};
