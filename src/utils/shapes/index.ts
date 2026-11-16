@@ -67,6 +67,8 @@ export interface Shape {
   category: ShapeCategory;
   /** What the example measurements make, so they read as an example. */
   example: string;
+  /** What it makes and what to measure, shown above the settings. */
+  intro: string;
   fields: Array<ShapeField>;
   options: Array<ShapeOption>;
 }
@@ -106,6 +108,8 @@ export const SHAPES: Array<Shape> = [
     name: 'Cylinder',
     category: 'tubes',
     example: 'Arm band',
+    intro:
+      'A straight tube from one rectangle: wrap it round and close the seam. Use it for arm bands, cuffs, belt loops and pipes. Measure around the arm or form it goes on, and how tall it should be.',
     fields: [
       {
         kind: 'length',
@@ -130,6 +134,8 @@ export const SHAPES: Array<Shape> = [
     name: 'Angled cylinder',
     category: 'bent-tubes',
     example: 'Boot top',
+    intro:
+      'A tube cut off at a slant, so one side stands taller than the other. Use it for boot tops, slanted cuffs and pipes that meet a surface at an angle. Measure around, then the short and the tall side.',
     fields: [
       {
         kind: 'length',
@@ -167,6 +173,8 @@ export const SHAPES: Array<Shape> = [
     name: 'Elbow',
     category: 'bent-tubes',
     example: 'Steampunk pipe',
+    intro:
+      'A tube that bends, built from wedge-shaped sections like a lobster-back pipe. Use it for steampunk pipes, hoses, ducts and elbow joints. Set how far it bends and how wide the turn is; more sections make a smoother bend.',
     fields: [
       {
         kind: 'length',
@@ -214,6 +222,8 @@ export const SHAPES: Array<Shape> = [
     name: 'Curved horn',
     category: 'bent-tubes',
     example: 'Demon horn',
+    intro:
+      'A horn that tapers to a point and curls as it goes, built from wedge-shaped sections. Use it for demon horns, ram horns and tusks. Measure around the base and the tip, the length along the curl, and how far it turns.',
     fields: [
       {
         kind: 'length',
@@ -270,6 +280,8 @@ export const SHAPES: Array<Shape> = [
     name: 'Cone',
     category: 'tubes',
     example: 'Horn tip',
+    intro:
+      'A cone unrolls into one fan-shaped piece with a single seam. Use it for horns, spikes, claws and hat tips. Measure around the base and straight up to the tip; the arc and seam length are worked out for you.',
     fields: [
       {
         kind: 'length',
@@ -295,6 +307,8 @@ export const SHAPES: Array<Shape> = [
     name: 'Truncated cone',
     category: 'tubes',
     example: 'Bracer',
+    intro:
+      "A cone with the tip cut off, wider at one end than the other. It's the shape behind most bracers, gauntlet cuffs and greaves: measure around the narrow end and the wide end, and the height between them.",
     fields: [
       {
         kind: 'length',
@@ -328,6 +342,8 @@ export const SHAPES: Array<Shape> = [
     name: 'Dome',
     category: 'domes',
     example: 'Helmet crown',
+    intro:
+      'A rounded cap built from gores, the long pointed panels that meet at the top. Use it for helmet crowns, pauldrons and shield bosses. Measure around the head or form and how high the dome should rise.',
     fields: [
       {
         kind: 'length',
@@ -354,6 +370,8 @@ export const SHAPES: Array<Shape> = [
     name: 'Oval dome',
     category: 'shaped-domes',
     example: 'Shield boss',
+    intro:
+      'A dome with a taller, egg-shaped profile: a low one rolls over smoothly, a tall one turns into an egg. Built from gores, for shield bosses, egg-shaped helmets and rounded knee and elbow cops.',
     fields: [
       baseCircumference(450),
       {
@@ -373,6 +391,8 @@ export const SHAPES: Array<Shape> = [
     name: 'Pointed dome',
     category: 'shaped-domes',
     example: 'Pointed helmet',
+    intro:
+      'A dome whose gores meet in a point instead of a rounded top, like a gothic arch. Use it for pointed helmets, spires and turret roofs. Measure around the base and up to the point.',
     fields: [
       baseCircumference(600),
       {
@@ -392,6 +412,8 @@ export const SHAPES: Array<Shape> = [
     name: 'Sphere',
     category: 'domes',
     example: 'Orb',
+    intro:
+      'A full ball built from gores that meet at both poles. Use it for orbs, staff tops, lanterns and round props. All it needs is the circumference you want.',
     fields: [
       {
         kind: 'length',
@@ -410,6 +432,8 @@ export const SHAPES: Array<Shape> = [
     name: 'Capsule',
     category: 'shaped-domes',
     example: 'Power cell',
+    intro:
+      'A tube with a rounded cap on each end, like a pill. Use it for vials, power cells, canisters and tanks. Measure around it and from end to end, caps included.',
     fields: [
       {
         kind: 'length',
@@ -436,6 +460,8 @@ export const SHAPES: Array<Shape> = [
     name: 'Box',
     category: 'boxes',
     example: 'Belt pouch',
+    intro:
+      'A box that folds up from one flat net, with or without a lid. Use it for belt pouches, ammo boxes, armour plates and props. Enter the width, depth and height and the fold lines are marked for you.',
     fields: [
       {
         kind: 'length',
@@ -473,6 +499,8 @@ export const SHAPES: Array<Shape> = [
     name: 'Pyramid',
     category: 'boxes',
     example: 'Shoulder spike',
+    intro:
+      'A pyramid on a square or rectangular base, with or without the base panel. Use it for shoulder spikes, studs and armour trim. Height goes straight up from the base, not along the sloping face.',
     fields: [
       {
         kind: 'length',
@@ -511,6 +539,8 @@ export const SHAPES: Array<Shape> = [
     name: 'Prism',
     category: 'boxes',
     example: 'Crystal',
+    intro:
+      'A straight column with flat faces: three sides for a triangle, six for a hexagon. Use it for crystals, gems, pillars and faceted handles. Set the number of sides, the width of one face and the length.',
     fields: [
       {
         kind: 'count',
@@ -545,6 +575,8 @@ export const SHAPES: Array<Shape> = [
     name: 'Tapered prism',
     category: 'faceted',
     example: 'Faceted bracer',
+    intro:
+      'A faceted column that narrows from one end to the other: a truncated cone with flat sides. Use it for faceted bracers, greaves and crystal shards. Six or eight sides read as armour; fewer look more angular.',
     fields: [
       {
         kind: 'count',

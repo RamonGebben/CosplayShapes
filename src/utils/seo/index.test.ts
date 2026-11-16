@@ -31,6 +31,21 @@ describe('shapeSeo', () => {
   });
 });
 
+describe('shape intros', () => {
+  // The intro is most of what sets one shape page apart from another.
+  it('gives every shape its own intro', () => {
+    const intros = SHAPES.map(shape => shape.intro);
+    expect(new Set(intros).size).toBe(SHAPES.length);
+  });
+
+  it('keeps every intro to a short paragraph', () => {
+    SHAPES.forEach(shape => {
+      expect(shape.intro.length).toBeGreaterThanOrEqual(120);
+      expect(shape.intro.length).toBeLessThanOrEqual(280);
+    });
+  });
+});
+
 describe('webApplicationSchema', () => {
   it('describes the site as a free web app', () => {
     expect(webApplicationSchema()).toMatchObject({
