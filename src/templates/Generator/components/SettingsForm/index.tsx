@@ -16,6 +16,7 @@ import type { Fact } from '~/utils/pattern';
 import { hasRoundFields, isRoundField, type Shape } from '~/utils/shapes';
 import type { Unit } from '~/utils/units';
 import { Column } from './components/Column';
+import { Intro } from './components/Intro';
 import { MeasureHelp } from './components/MeasureHelp';
 import { Readout } from './components/Readout';
 import { RoundPair } from './components/RoundPair';
@@ -57,6 +58,7 @@ export const SettingsForm = ({
       aria-label="Pattern settings"
       onSubmit={event => event.preventDefault()}
     >
+      <Intro>{shape.intro}</Intro>
       <SegmentedControl
         label="Units"
         options={[
